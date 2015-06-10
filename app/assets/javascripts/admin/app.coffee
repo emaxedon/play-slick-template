@@ -187,6 +187,7 @@ define [ 'angular', 'ngRoute', 'ngCookies', 'angular-ui-bootstrap' ], (angular, 
 							search()
 						else
 							$scope.error = data.message
+							$scope.disabled = false
 					.error (data, status, headers, config) ->
 						$scope.error = "Oops! Problem editing user. Try again."
 			else
@@ -198,6 +199,7 @@ define [ 'angular', 'ngRoute', 'ngCookies', 'angular-ui-bootstrap' ], (angular, 
 							search()
 						else
 							$scope.error = data.message
+							$scope.disabled = false
 					.error (data, status, headers, config) ->
 						$scope.error = "Oops! Problem creating user. Try again."
 
@@ -327,6 +329,7 @@ define [ 'angular', 'ngRoute', 'ngCookies', 'angular-ui-bootstrap' ], (angular, 
 							$scope.disabled = false
 							search()
 						else
+							$scope.disabled = false
 							$scope.error = data.message
 					.error (data, status, headers, config) ->
 						$scope.error = "Oops! Problem editing feed. Try again."
