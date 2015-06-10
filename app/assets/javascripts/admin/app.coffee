@@ -156,11 +156,14 @@ define [ 'angular', 'ngRoute', 'ngCookies', 'angular-ui-bootstrap' ], (angular, 
 				"password": ""
 				"role": "user"
 				"location": ""
+			$scope.disabled = false
+			$scope.error = false
 			$scope.form = 'create'
 
 		$scope.cancel = -> $scope.form = false
 		
 		$scope.edit = (id) ->
+			$scope.error = false
 			$http.get('/auth/user/' + id)
 				.success (data, status, headers, config) ->
 					if data.result == 0
@@ -175,13 +178,17 @@ define [ 'angular', 'ngRoute', 'ngCookies', 'angular-ui-bootstrap' ], (angular, 
 			
 		$scope.formSubmit = ->
 			$scope.disabled = true
-			
+
 			if $scope.form == 'edit'
 				$http.put('/auth/user/' + $scope.userId, $scope.userDetails )
 					.success (data, status, headers, config) ->
 						if data.result == 0
 							$scope.disabled = false
 							search()
+						else
+							$scope.error = data.message
+					.error (data, status, headers, config) ->
+						$scope.error = "Oops! Problem editing user. Try again."
 			else
 				$http.post( '/auth/create', $scope.userDetails )
 					.success (data, status, headers, config) ->
@@ -189,6 +196,10 @@ define [ 'angular', 'ngRoute', 'ngCookies', 'angular-ui-bootstrap' ], (angular, 
 							$scope.form = false
 							$scope.disabled = false
 							search()
+						else
+							$scope.error = data.message
+					.error (data, status, headers, config) ->
+						$scope.error = "Oops! Problem creating user. Try again."
 
 		$scope.getLocation = (val) ->
 			$http.get 'http://maps.googleapis.com/maps/api/geocode/json',
@@ -261,11 +272,13 @@ define [ 'angular', 'ngRoute', 'ngCookies', 'angular-ui-bootstrap' ], (angular, 
 				"youtubeApi": ""
 				"location": ""
 			$scope.disabled = false
+			$scope.error = false
 			$scope.form = 'create'
 
 		$scope.cancel = -> $scope.form = false
 		
 		$scope.edit = (id) ->
+			$scope.error = false
 			$http.get('/feeds/' + id)
 				.success (data, status, headers, config) ->
 					if data.result == 0
@@ -302,8 +315,10 @@ define [ 'angular', 'ngRoute', 'ngCookies', 'angular-ui-bootstrap' ], (angular, 
 						if data.result == 0
 							$scope.disabled = false
 							search()
+						else
+							$scope.error = data.message
 					.error (data, status, headers, config) ->
-						console.log 'error'
+						$scope.error = "Oops! Problem editing feed. Try again."
 			else
 				$http.post( '/feeds/create', $scope.feedDetails )
 					.success (data, status, headers, config) ->
@@ -311,9 +326,10 @@ define [ 'angular', 'ngRoute', 'ngCookies', 'angular-ui-bootstrap' ], (angular, 
 							$scope.form = false
 							$scope.disabled = false
 							search()
+						else
+							$scope.error = data.message
 					.error (data, status, headers, config) ->
-						console.log data
-						console.log status
+						$scope.error = "Oops! Problem editing feed. Try again."
 
 		$scope.getLocation = (val) ->
 			$http.get 'http://maps.googleapis.com/maps/api/geocode/json',
