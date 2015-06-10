@@ -1,0 +1,18 @@
+<form id="form-signin" class="form-admin col-xs-12 col-sm-8 col-sm-offset-2 col-md-4 col-md-offset-4" role="form" ng-submit="submit()" ng-show="show">
+	<h2 class="text-center">Admin login</h2>
+
+	<input type="email" ng-model="email" id="inputEmail" class="form-control" placeholder="Email address" required autofocus>
+
+	<input type="password" ng-model="password" id="inputPassword" class="form-control" placeholder="Password" required>
+
+	<div class="row-lg text-right">
+		<a href="#forgotPassword">Forgot password?</a>
+	</div>
+	<button class="btn btn-lg btn-primary btn-block" type="submit" ng-disabled="disabled">Sign in</button>
+</form>
+
+<div class="alert alert-danger col-xs-12 col-sm-8 col-sm-offset-2 col-md-4 col-md-offset-4" ng-show="error">
+	<span class="glyphicon glyphicon-exclamation-sign"></span> {{error}}
+</div>
+
+<div ng-hide="show"></div>

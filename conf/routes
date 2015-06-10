@@ -1,0 +1,49 @@
+# Routes
+# This file defines all application routes (Higher priority routes first)
+# ~~~~
+
+# Home page
+GET     /                              controllers.Application.admin
+
+# Map static resources from the /public folder to the /assets URL path
+GET     /assets/*file                  controllers.Assets.at(path="/public", file)
+
+GET     /webjars/*file                 controllers.WebJarAssets.at(file)
+
+GET     /admin                         controllers.Application.admin
+
+# Auth API
+POST    /auth/login                    controllers.Authentication.login
+POST    /auth/register                 controllers.Authentication.register
+POST    /auth/create                   controllers.Authentication.create
+GET     /auth/user/:id                 controllers.Authentication.find(id: Int)
+PUT     /auth/user/:id                 controllers.Authentication.update(id: Int)
+PUT     /auth/password                 controllers.Authentication.password
+GET     /auth/logout                   controllers.Authentication.logout
+GET     /auth/user                     controllers.Authentication.user
+GET     /auth/users                    controllers.Authentication.users
+GET     /auth/count                    controllers.Authentication.count
+GET     /auth/recent/:size             controllers.Authentication.recent(size: Int)
+POST    /auth/prefix                   controllers.Authentication.prefix
+POST    /auth/prefix/count             controllers.Authentication.prefixCount
+POST    /auth/forgotPassword           controllers.Authentication.forgotPassword
+GET     /auth/remove/:id               controllers.Authentication.remove(id: Int)
+GET     /auth/:id/:token               controllers.Authentication.loginOnce(id: Int, token: String)
+
+# Twitter API
+GET     /twitter/search                controllers.Twitter.search(screenName: String)
+
+# YouTube API
+GET     /youtube/search                controllers.Youtube.search(username: String)
+
+# Feeds API
+GET     /feeds                         controllers.Feeds.list
+POST    /feeds/create                  controllers.Feeds.create
+GET     /feeds/all                     controllers.Feeds.all
+GET     /feeds/count                   controllers.Feeds.count
+GET     /feeds/recent/:size            controllers.Feeds.recent(size: Int)
+POST    /feeds/prefix                  controllers.Feeds.prefix
+GET     /feeds/remove/:id              controllers.Feeds.remove(id: Int)
+GET     /feeds/nearby                  controllers.Feeds.nearby(radius: Double ?= 50)
+GET     /feeds/:id                     controllers.Feeds.find(id: Int)
+PUT     /feeds/:id                     controllers.Feeds.update(id: Int)

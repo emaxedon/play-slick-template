@@ -1,0 +1,72 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+				aria-controls="navbar">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="#/dash">Admin</a>
+		</div>
+		<div id="navbar" class="collapse navbar-collapse">
+			<ul class="nav navbar-nav">
+				<li class="active"><a href="#/dash">Dashboard</a></li>
+				<li><a href="#/users">Users</a></li>
+				<li><a href="#/feeds">Feeds</a></li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+				<li><a class="btn" ng-click="logout()">Logout</a></li>
+			</ul>
+		</div><!--/.nav-collapse -->
+	</div>
+</nav>
+
+<div class="admin-body">
+	<div class="row">
+		<div class="col-md-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">Recent users ({{ userCount }} users in total)</div>
+				<table class="table">
+					<tr>
+						<th>ID</th>
+						<th>Role</th>
+						<th>Email</th>
+						<th>Registered</th>
+						<th>Location</th>
+					</tr>
+					<tr ng-repeat="user in users">
+						<td>{{ user.id }}</td>
+						<td>{{ user.role }}</td>
+						<td>{{ user.email }}</td>
+						<td>{{ user.dateCreated.time | date:'yy-MM-dd' }}</td>
+						<td>{{ user.postalCode }}</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+		
+		<div class="col-md-6">
+			<div class="panel panel-default">
+				<div class="panel-heading">Recent feeds ({{ feedCount }} feeds in total)</div>
+				<table class="table">
+					<tr>
+						<th>ID</th>
+						<th>Type</th>
+						<th>Name</th>
+						<th>Added</th>
+						<th>Location</th>
+					</tr>
+					<tr ng-repeat="feed in feeds">
+						<td>{{ feed.id }}</td>
+						<td>{{ feed.category }}</td>
+						<td>{{ feed.name }}</td>
+						<td>{{ feed.dateCreated.time | date:'yy-MM-dd' }}</td>
+						<td>{{ feed.postalCode }}</td>
+					</tr>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>

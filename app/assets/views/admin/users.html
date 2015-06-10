@@ -1,0 +1,91 @@
+<nav class="navbar navbar-default navbar-fixed-top">
+	<div class="container">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+				aria-controls="navbar">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="#/dash">Admin</a>
+		</div>
+		<div id="navbar" class="collapse navbar-collapse">
+			<ul class="nav navbar-nav">
+				<li><a href="#/dash">Dashboard</a></li>
+				<li class="active"><a href="#/users">Users</a></li>
+				<li><a href="#/feeds">Feeds</a></li>
+			</ul>
+			<ul class="nav navbar-nav navbar-right">
+				<li><a class="btn" ng-click="logout()">Logout</a></li>
+			</ul>
+		</div><!--/.nav-collapse -->
+	</div>
+</nav>
+
+<div class="admin-body">
+	<div class="row">
+		<div class="admin-left">
+			<button class="btn btn-primary btn-block" ng-click="create()">Create new user</button>
+			<form ng-submit="submit()">
+				<div class="input-group">
+					<span class="input-group-addon">Find</span>
+					<input class="form-control" type="text" ng-change="change()" ng-model="email" ng-model-options="{ debounce: 250 }"
+						placeholder="User email" autofocus/>
+				</div>
+			</form>
+
+			<ul>
+				<li ng-repeat="user in users" ng-click="edit(user.id)">
+					{{ user.email }} <span class="badge">{{ user.role }}</span>
+				</li>
+			</ul>
+		</div>
+		
+		<div class="admin-right" ng-show="form">
+			<form ng-submit="formSubmit()">
+				<h2 class="text-center">{{form == 'edit' ? "Edit" : "Create"}} user</h2>
+
+				<div class="form-group">
+					<label>Email</label>
+					<input type="email" ng-model="userDetails.email" id="inputEmail" class="form-control">
+				</div>
+
+				<div class="form-group" ng-show="form == 'edit'">
+					<label>Password <span class="text-muted">(Optional)</span></label>
+					<input type="text" ng-model="userDetails.password" id="inputPassword" class="form-control" placeholder="Enter new password to change user's password">
+				</div>
+				<div class="form-group" ng-show="form == 'create'">
+					<label>Password</label>
+					<input type="text" ng-model="userDetails.password" id="inputPassword" class="form-control">
+				</div>
+
+				<div class="form-group">
+					<label>Role</label>
+					<select ng-model="userDetails.role" id="inputRole" class="form-control">
+						<option value="user">User</option>
+						<option value="admin">Admin</option>
+					</select>
+				</div>
+
+				<div class="form-group">
+					<label>Location</label>
+					<input type="text" ng-model="userDetails.location" ng-model-options="{ debounce: 250 }" id="inputLocation" class="form-control"
+						typeahead="address for address in getLocation($viewValue)">
+				</div>
+
+				<div class="row">
+					<div class="col-xs-6">
+						<button class="btn btn-primary" type="submit" ng-disabled="disabled">{{form == 'edit' ? "Update" : "Add"}}</button>
+					</div>
+					<div class="col-xs-6 text-right" ng-show="form == 'edit'">
+						<button class="btn btn-danger" type="button" ng-click="remove()" ng-disabled="disabled">Remove</button>
+					</div>
+					<div class="col-xs-6 text-right" ng-show="form == 'create'">
+						<button class="btn btn-danger" type="button" ng-click="cancel()" ng-disabled="disabled">Cancel</button>
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+</div>
