@@ -103,38 +103,28 @@ object FeedService {
 				latitude = geo.latitude,
 				longitude = geo.longitude)
 
-		instagramApi match {
-			case Some(username) =>
-				WS.url("https://api.instagram.com/v1/users/search")
-					.withHeaders("Accept" -> "application/json")
-					.withQueryString("client_id" -> config.getString("instagram.clientId"), "q" -> username).get().map { response =>
-						val userid = ((response.json \\ "id").head.as[String])
+		facebookApi match {
+			case Some(pageName) =>
+				val accessToken = config.getString("facebook.accessToken")
 
-						val userMedia = WS.url("https://api.instagram.com/v1/users/" + userid + "/media/recent")
-							.withHeaders("Accept" -> "application/json")
-							.withQueryString("client_id" -> config.getString("instagram.clientId")).get().map { response =>
-								(response.json \ "meta" \ "code").as[Int] match {
-									case 200 =>
-										val data = response.json \ "data"
-										
-										for (e <- data.as[Seq[JsValue]]) {
-											val timestamp = new Timestamp((e \ "created_time").as[String].toLong*1000)
-											val caption = (e \ "caption" \ "text").as[String]
-											val dataType = (e \ "type").as[String]
-											val mediaUrl =  (e \ "type").as[String] match {
-												case "image" =>
-													(e \ "images" \ "standard_resolution" \ "url").as[String]
-												case "video" =>
-													(e \ "videos" \ "standard_resolution" \ "url").as[String]
-												case _ => ""
-											}
-											val previewUrl = (e \ "images" \ "standard_resolution" \ "url").as[String]
-											
-											DataService.create(feedId, "instagram", dataType, mediaUrl, previewUrl, caption, timestamp)
-										}
-									case 400 =>
-										Logger.debug((response.json \ "meta" \ "error_message").as[String])
-									case _ =>
+				WS.url("https://graph.facebook.com/search")
+					.withQueryString("q" -> pageName, "type" -> "page", "access_token" -> accessToken).get().map { response =>
+						val pageid = ((response.json \\ "id").head.as[String])
+
+						WS.url("https://graph.facebook.com/v2.3/" + pageid + "/posts")
+							.withQueryString("access_token" -> accessToken).get().map { response =>
+								val data = response.json \ "data"
+
+								for (e <- data.as[Seq[JsValue]]) {
+									val FACEBOOK_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZ")
+
+									val timestamp = new Timestamp(FACEBOOK_DATE_FORMAT.parse((e \ "created_time").as[String]).getTime).getTime
+									val text = (e \ "description").as[String]
+									val mediaUrl = (e \ "link").as[String]
+									val previewUrl = (e \ "link").as[String]
+									val dataType = (e \ "type").as[String]
+									
+									DataService.create(feedId, "twitter", dataType, mediaUrl, previewUrl, text, timestamp)
 								}
 							}
 					}
@@ -171,6 +161,44 @@ object FeedService {
 
 							DataService.create(feedId, "twitter", dataType, mediaUrl, previewUrl, text, timestamp)
 						}
+					}
+			case None =>
+		}
+
+		instagramApi match {
+			case Some(username) =>
+				WS.url("https://api.instagram.com/v1/users/search")
+					.withHeaders("Accept" -> "application/json")
+					.withQueryString("client_id" -> config.getString("instagram.clientId"), "q" -> username).get().map { response =>
+						val userid = ((response.json \\ "id").head.as[String])
+
+						val userMedia = WS.url("https://api.instagram.com/v1/users/" + userid + "/media/recent")
+							.withHeaders("Accept" -> "application/json")
+							.withQueryString("client_id" -> config.getString("instagram.clientId")).get().map { response =>
+								(response.json \ "meta" \ "code").as[Int] match {
+									case 200 =>
+										val data = response.json \ "data"
+										
+										for (e <- data.as[Seq[JsValue]]) {
+											val timestamp = new Timestamp((e \ "created_time").as[String].toLong*1000)
+											val caption = (e \ "caption" \ "text").as[String]
+											val dataType = (e \ "type").as[String]
+											val mediaUrl =  (e \ "type").as[String] match {
+												case "image" =>
+													(e \ "images" \ "standard_resolution" \ "url").as[String]
+												case "video" =>
+													(e \ "videos" \ "standard_resolution" \ "url").as[String]
+												case _ => ""
+											}
+											val previewUrl = (e \ "images" \ "standard_resolution" \ "url").as[String]
+											
+											DataService.create(feedId, "instagram", dataType, mediaUrl, previewUrl, caption, timestamp)
+										}
+									case 400 =>
+										Logger.debug((response.json \ "meta" \ "error_message").as[String])
+									case _ =>
+								}
+							}
 					}
 			case None =>
 		}

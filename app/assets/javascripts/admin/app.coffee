@@ -249,6 +249,13 @@ define [ 'angular', 'ngRoute', 'ngCookies', 'angular-ui-bootstrap' ], (angular, 
 					screenName: val
 			.then (response) ->
 				response.data.map( (item) -> item.screen_name )
+
+		$scope.getFacebookPageName = (val) ->
+			$http.get '/facebook/search',
+				params:
+					pageName: val
+			.then (response) ->
+				response.data.data.map( (item) -> item.name )
 			
 		$scope.change = ->
 			if $scope.name.length >= 3

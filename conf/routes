@@ -36,6 +36,9 @@ GET     /twitter/search                controllers.Twitter.search(screenName: St
 # YouTube API
 GET     /youtube/search                controllers.Youtube.search(username: String)
 
+# Facebook API
+GET     /facebook/search               controllers.Facebook.search(pageName: String)
+
 # Feeds API
 GET     /feeds                         controllers.Feeds.list
 POST    /feeds/create                  controllers.Feeds.create
