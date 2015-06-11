@@ -14,6 +14,7 @@ import java.text.SimpleDateFormat
 import models.{FeedDetails, Feed, Data}
 import util._
 import helpers._
+import java.net.URLEncoder
 
 class FeedTable(tag: Tag) extends Table[Feed](tag, "feeds") {
 
@@ -108,7 +109,7 @@ object FeedService {
 				val accessToken = config.getString("facebook.accessToken")
 
 				WS.url("https://graph.facebook.com/search")
-					.withQueryString("q" -> pageName, "type" -> "page", "access_token" -> accessToken).get().map { response =>
+					.withQueryString("q" -> URLEncoder.encode(pageName, "UTF-8"), "type" -> "page", "access_token" -> accessToken).get().map { response =>
 						val pageid = ((response.json \\ "id").head.as[String])
 
 						WS.url("https://graph.facebook.com/v2.3/" + pageid + "/posts")
@@ -118,13 +119,13 @@ object FeedService {
 								for (e <- data.as[Seq[JsValue]]) {
 									val FACEBOOK_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZ")
 
-									val timestamp = new Timestamp(FACEBOOK_DATE_FORMAT.parse((e \ "created_time").as[String]).getTime).getTime
+									val timestamp = new Timestamp(FACEBOOK_DATE_FORMAT.parse((e \ "created_time").as[String]).getTime)
 									val text = (e \ "description").as[String]
 									val mediaUrl = (e \ "link").as[String]
 									val previewUrl = (e \ "link").as[String]
 									val dataType = (e \ "type").as[String]
 									
-									DataService.create(feedId, "twitter", dataType, mediaUrl, previewUrl, text, timestamp)
+									DataService.create(feedId, "facebook", dataType, mediaUrl, previewUrl, text, timestamp)
 								}
 							}
 					}
@@ -225,7 +226,7 @@ object FeedService {
 									"fields" -> "items",
 									"maxResults" -> "50",
 									"key" -> key).get().map { response =>
-										val data = response.json 
+										val data = response.json
 
 										for (e <- (data \ "items").as[Seq[JsValue]]) {
 											val YOUTUBE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX")
@@ -233,7 +234,7 @@ object FeedService {
 											val timestamp = new Timestamp(YOUTUBE_DATE_FORMAT.parse((e \ "snippet" \ "publishedAt").as[String]).getTime)
 											val text = (e \ "snippet" \ "description").as[String]
 											val mediaUrl = (e \ "id" \ "videoId").as[String]
-											val previewUrl = (e \ "snippet" \ "thumbnails" \ "default").as[String]
+											val previewUrl = (e \ "snippet" \ "thumbnails" \ "default" \ "url").as[String]
 											val dataType = "video"
 
 											DataService.create(feedId, "youtube", dataType, mediaUrl, previewUrl, text, timestamp)
