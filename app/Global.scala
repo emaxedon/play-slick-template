@@ -87,9 +87,9 @@ object Global extends GlobalSettings {
 
 				Logger.info( "adding data to feed 2")
 
-				DataService.create(2, "instagram", "image", "path/to/url", "some text", now)
-				DataService.create(2, "facebook", "text", "path/to/url", "some text", now)
-				DataService.create(2, "twitter", "text", "path/to/url", "some text", now)
+				DataService.create(2, "instagram", "image", "path/to/url", "path/to/url", "some text", now)
+				DataService.create(2, "facebook", "text", "path/to/url", "path/to/url", "some text", now)
+				DataService.create(2, "twitter", "text", "path/to/url", "path/to/url", "some text", now)
 				
 				FeedService.addChild(2, 3)
 				FeedService.addChild(2, 4)

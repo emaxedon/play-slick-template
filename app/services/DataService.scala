@@ -15,13 +15,14 @@ class DataTable(tag: Tag) extends Table[Data](tag, "datas") {
 	def version = column[Long]("version", O.NotNull)
 	def network = column[String]("network", O.NotNull)
 	def media = column[String]("media", O.NotNull)
-	def url = column[String]("url")
+	def mediaUrl = column[String]("media_url")
+	def previewUrl = column[String]("preview_url")
 	def text = column[String]("text")
 	def date = column[Timestamp]("date", O.NotNull)
 
 	def feed = foreignKey("datas_feed_fk", feedId, TableQuery[FeedTable])(_.id, onDelete=ForeignKeyAction.Cascade)
 
-	def * = (id.?, feedId, version, network, media, url, text, date) <> (Data.tupled, Data.unapply)
+	def * = (id.?, feedId, version, network, media, mediaUrl, previewUrl, text, date) <> (Data.tupled, Data.unapply)
 }
 
 object DataService {
@@ -35,16 +36,17 @@ object DataService {
 	}
 
 	def list(feedId: Int): Seq[Data] = db.withSession { implicit session =>
-		datas.filter(_.feedId === feedId).list
+		datas.filter(_.feedId === feedId).sortBy(_.date.desc).list
 	}
 
-	def create(feedId: Int, network: String, media: String, url: String, text: String, date: Timestamp): Option[Data] = db.withSession { implicit session =>
+	def create(feedId: Int, network: String, media: String, mediaUrl: String, previewUrl: String, text: String, date: Timestamp): Option[Data] = db.withSession { implicit session =>
 		val dataId = (datas returning datas.map(_.id)) +=
 			Data(
 				feedId = feedId,
 				network = network,
 				media = media,
-				url = url,
+				mediaUrl = mediaUrl,
+				previewUrl = previewUrl,
 				text = text,
 				date = date)
 			

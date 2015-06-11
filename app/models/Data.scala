@@ -11,7 +11,8 @@ case class Data(
 	version: Long = 1,
 	network: String,
 	media: String,
-	url: String,
+	mediaUrl: String,
+	previewUrl: String,
 	text: String,
 	date: Timestamp = now
 )
@@ -21,7 +22,8 @@ case class DataJson(
 	id: Int,
 	network: String,
 	media: String,
-	url: String,
+	mediaUrl: String,
+	previewUrl: String,
 	text: String,
 	date: Timestamp
 ) {
@@ -29,7 +31,8 @@ case class DataJson(
 		id = data.id.get, 
 		network = data.network,
 		media = data.media, 
-		url = data.url, 
+		mediaUrl = data.mediaUrl,
+		previewUrl = data.previewUrl,
 		text = data.text,
 		date = data.date)
 }

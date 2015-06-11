@@ -121,15 +121,16 @@ object FeedService {
 											val timestamp = new Timestamp((e \ "created_time").as[String].toLong*1000)
 											val caption = (e \ "caption" \ "text").as[String]
 											val dataType = (e \ "type").as[String]
-											val url =  (e \ "type").as[String] match {
+											val mediaUrl =  (e \ "type").as[String] match {
 												case "image" =>
 													(e \ "images" \ "standard_resolution" \ "url").as[String]
 												case "video" =>
 													(e \ "videos" \ "standard_resolution" \ "url").as[String]
 												case _ => ""
 											}
+											val previewUrl = (e \ "images" \ "standard_resolution" \ "url").as[String]
 											
-											DataService.create(feedId, "instagram", dataType, url, caption, timestamp)
+											DataService.create(feedId, "instagram", dataType, mediaUrl, previewUrl, caption, timestamp)
 										}
 									case 400 =>
 										Logger.debug((response.json \ "meta" \ "error_message").as[String])
@@ -159,12 +160,16 @@ object FeedService {
 								case Some(url) => (e \\ "type").head.as[String]
 								case None => "tweet"
 							}
-							val url = (e \\ "media_url").headOption match {
+							val mediaUrl = (e \\ "media_url").headOption match {
 								case Some(url) => (e \\ "media_url").head.as[String]
 								case None => ""
 							}
+							val previewUrl = (e \\ "display_url").headOption match {
+								case Some(url) => (e \\ "display_url").head.as[String]
+								case None => ""
+							}
 
-							DataService.create(feedId, "twitter", dataType, url, text, timestamp)
+							DataService.create(feedId, "twitter", dataType, mediaUrl, previewUrl, text, timestamp)
 						}
 					}
 			case None =>
@@ -176,8 +181,8 @@ object FeedService {
 
 				WS.url("https://www.googleapis.com/youtube/v3/channels")
 					.withQueryString(
-						"part" -> "contentDetails", 
-						"forUsername" -> "sermonindex", 
+						"part" -> "id", 
+						"forUsername" -> username,
 						"maxResults" -> "1",
 						"fields" -> "items",
 						"key" -> key).get().map { response =>
@@ -199,10 +204,11 @@ object FeedService {
 
 											val timestamp = new Timestamp(YOUTUBE_DATE_FORMAT.parse((e \ "snippet" \ "publishedAt").as[String]).getTime)
 											val text = (e \ "snippet" \ "description").as[String]
-											val url = "http://youtube.com/watch?v=" + (e \ "id" \ "videoId").as[String]
+											val mediaUrl = (e \ "id" \ "videoId").as[String]
+											val previewUrl = (e \ "snippet" \ "thumbnails" \ "default").as[String]
 											val dataType = "video"
 
-											DataService.create(feedId, "youtube", dataType, url, text, timestamp)
+											DataService.create(feedId, "youtube", dataType, mediaUrl, previewUrl, text, timestamp)
 										}
 									}
 						}

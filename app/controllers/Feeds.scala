@@ -82,5 +82,18 @@ object Feeds extends Controller with Secured {
 		else
 			Ok(resultJson(1, "Oops! search radius out of range (0 < radius <= 200).", JsNull))
 	}
+
+	def follow(feedId: Int) = IsAuthenticated(parse.anyContent) { implicit user => implicit request =>
+		UserService.follow(user.id.get, feedId)
+
+		Ok(resultJson(0, "successfully following feed", JsNull))
+	}
+
+	def unfollow(feedId: Int) = IsAuthenticated(parse.anyContent) { implicit user => implicit request =>
+		UserService.unfollow(user.id.get, feedId) match {
+			case true => Ok(resultJson(0, "successfully unfollowing feed", JsNull))
+			case false => Ok(resultJson(1, "failed to unfollow feed", JsNull))
+		}
+	}
 	
 }
