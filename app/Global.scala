@@ -84,16 +84,6 @@ object Global extends GlobalSettings {
 					
 					FeedService.create( team.first + "'s Team", "team", None, None, None, None, team.postal, team.location )
 				}
-
-				Logger.info( "adding data to feed 2")
-
-				DataService.create(2, "instagram", "image", "path/to/url", "path/to/url", "some text", now)
-				DataService.create(2, "facebook", "text", "path/to/url", "path/to/url", "some text", now)
-				DataService.create(2, "twitter", "text", "path/to/url", "path/to/url", "some text", now)
-				
-				FeedService.addChild(2, 3)
-				FeedService.addChild(2, 4)
-				FeedService.addChild(2, 5)
 			case _ =>
 		}
 
