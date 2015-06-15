@@ -19,7 +19,7 @@ object Mandrill extends Controller with Secured {
 	val key = config.getString("smtp.password")
 
 	def send = IsAdministrator(parse.anyContent) { implicit user => implicit request =>
-		val json: JsValue = Json.obj(
+		val email = Json.obj(
 			"key" -> key,
 			"text" -> "Example email",
 			"subject" -> "example subject",
@@ -27,13 +27,9 @@ object Mandrill extends Controller with Secured {
 			"to" -> Json.arr(Json.obj("email" -> "emaxedon@gmail.com"))
 		)
 
-		Ok("")
-
-		// Await.result(WS.url("https://api.twitter.com/1.1/users/search.json")
-		// 	.withQueryString("q" -> screenName)
-		// 	.sign(OAuthCalculator(key, credentials)).get().map { response =>
-		// 		Ok(toJson(response.json))
-		// 	}, Duration(10000, MILLISECONDS))
+		Await.result(WS.url("https://mandrillapp.com/api/1.0/messages/send.json").post(email).map { response =>
+				Ok(toJson(response.json))
+			}, Duration(10000, MILLISECONDS))
 	}
 
 }

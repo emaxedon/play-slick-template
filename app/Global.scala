@@ -92,5 +92,11 @@ object Global extends GlobalSettings {
 			UserService.follow( 1, 2 )
 		
 		Logger.info( "done initializing" )
+
+		// val mandrillKey = config.getString("smtp.password")
+
+		// WS.url("https://mandrillapp.com/api/1.0/messages/send.json").post(json).map { response =>
+		// 		Logger.debug(Json.prettyPrint(response.json))
+		// 	}
 	}
 }
