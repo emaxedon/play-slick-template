@@ -41,7 +41,7 @@ define [ 'angular', 'ngRoute', 'angular-ui-bootstrap' ], (angular) ->
 	app.controller 'ForgotPasswordController', ['$scope', '$http', ($scope, $http) ->
 		$scope.submit = ->
 			$scope.disabled = true
-			$scope.info = "Generating password reset email..."
+			$scope.info = "Sending password reset email..."
 			$scope.message = false
 			$scope.error = false
 			$http.post('/auth/forgotPassword', {email: $scope.email})
