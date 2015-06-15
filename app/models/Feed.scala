@@ -11,6 +11,7 @@ case class Feed(
 	version: Long = 1,
 	category: String,
 	name: String,
+	facebookCover: Option[String] = None,
 	facebookApi: Option[String],
 	twitterApi: Option[String],
 	instagramApi: Option[String],
@@ -39,6 +40,7 @@ case class FeedJson (
 	version: Long,
 	category: String,
 	name: String,
+	facebookCover: Option[String],
 	facebookApi: Option[String],
 	twitterApi: Option[String],
 	instagramApi: Option[String],
@@ -51,7 +53,7 @@ case class FeedJson (
 	relatedFeeds: Seq[Int],
 	datas: Seq[DataJson]
 ) {
-	def this(f: Feed, relatedFeeds: Seq[Int], datas: Seq[DataJson]) = this(id = f.id.get, version = f.version, category = f.category, name = f.name, f.facebookApi, f.twitterApi, f.instagramApi, f.youtubeApi,
+	def this(f: Feed, relatedFeeds: Seq[Int], datas: Seq[DataJson]) = this(id = f.id.get, version = f.version, category = f.category, name = f.name, facebookCover = f.facebookCover, f.facebookApi, f.twitterApi, f.instagramApi, f.youtubeApi,
 		dateCreated = f.dateCreated, dateUpdated = f.dateUpdated, location = f.location, latitude = f.latitude, longitude = f.longitude, relatedFeeds = relatedFeeds, datas = datas)
 }
 

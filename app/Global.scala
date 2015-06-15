@@ -13,6 +13,7 @@ import com.typesafe.config._
 import play.api.libs.json._
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
+import java.text.Normalizer
 
 import models._
 import services._

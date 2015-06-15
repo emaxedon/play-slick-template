@@ -1,5 +1,5 @@
-define [ 'angular', 'ngRoute', 'ngCookies', 'angular-ui-bootstrap' ], (angular, ngCookies) ->
-	app = angular.module( 'app', ['ngRoute', 'ngCookies', 'ui.bootstrap'] )
+define [ 'angular', 'ngRoute', 'angular-ui-bootstrap' ], (angular) ->
+	app = angular.module( 'app', ['ngRoute', 'ui.bootstrap'] )
 
 	app.factory 'service', ['$http', '$location', ($http, $location) ->
 		logout: ->
@@ -9,7 +9,7 @@ define [ 'angular', 'ngRoute', 'ngCookies', 'angular-ui-bootstrap' ], (angular, 
 		loggedin: ->
 			$http.get('/auth/user')
 				.success (data, status, headers, config) ->
-					if (data.result != 0)
+					if (data.result != 1)
 						$location.path '/'
 		user: (success, error) ->
 			$http.get('/auth/user')
@@ -46,7 +46,7 @@ define [ 'angular', 'ngRoute', 'ngCookies', 'angular-ui-bootstrap' ], (angular, 
 			$scope.error = false
 			$http.post('/auth/forgotPassword', {email: $scope.email})
 				.success (data, status, headers, config) ->
-					if (data.result == 0)
+					if (data.result == 1)
 						$scope.info = false
 						$scope.message = "Password reset email has been sent"
 					else
@@ -64,7 +64,7 @@ define [ 'angular', 'ngRoute', 'ngCookies', 'angular-ui-bootstrap' ], (angular, 
 	
 	app.controller 'LoginController', ['$scope', '$http', '$location', 'service', ($scope, $http, $location, service) ->
 		service.user ((data) ->
-			if data.result == 0
+			if data.result == 1
 				$location.path '/dash'
 			else
 				$scope.show = true
@@ -77,7 +77,7 @@ define [ 'angular', 'ngRoute', 'ngCookies', 'angular-ui-bootstrap' ], (angular, 
 				.success (data, status, headers, config) ->
 					$scope.disabled = false
 					
-					if (data.result == 0)
+					if (data.result == 1)
 						if (data.data.role != "admin")
 							$scope.error = "Oops! Not an administrator account."
 							service.logout()
@@ -93,27 +93,23 @@ define [ 'angular', 'ngRoute', 'ngCookies', 'angular-ui-bootstrap' ], (angular, 
 		service.loggedin()
 		$http.get('/auth/recent/10')
 			.success (data, status, headers, config) ->
-				console.log data
-				
-				if data.result == 0
+				if data.result == 1
 					$scope.users = data.data.users
 					
 			.error (data, status, headers, config) ->
-				console.log data
-				console.log status
 				
 		$http.get('/auth/count')
 			.success (data, status, headers, config) ->
-				if data.result == 0
+				if data.result == 1
 					$scope.userCount = data.data.count
 		$http.get('/feeds/recent/10')
 			.success (data, status, headers, config) ->
-				if data.result == 0
+				if data.result == 1
 					$scope.feeds = data.data.feeds
 				
 		$http.get('/feeds/count')
 			.success (data, status, headers, config) ->
-				if data.result == 0
+				if data.result == 1
 					$scope.feedCount = data.data.count
 				
 		$scope.logout = service.logout
@@ -129,7 +125,7 @@ define [ 'angular', 'ngRoute', 'ngCookies', 'angular-ui-bootstrap' ], (angular, 
 			if $scope.email.length > 0
 				$http.post('/auth/prefix', {search: $scope.email})
 					.success (data, status, headers, config) ->
-						if data.result == 0
+						if data.result == 1
 							$scope.matches = data.data.users.length
 							$scope.users = data.data.users
 			else
@@ -146,7 +142,7 @@ define [ 'angular', 'ngRoute', 'ngCookies', 'angular-ui-bootstrap' ], (angular, 
 		$scope.remove = ->
 			$http.get('/auth/remove/' + $scope.userId)
 				.success (data, status, headers, config) ->
-					if data.result == 0
+					if data.result == 1
 						$scope.form = false
 						search()
 		
@@ -166,7 +162,7 @@ define [ 'angular', 'ngRoute', 'ngCookies', 'angular-ui-bootstrap' ], (angular, 
 			$scope.error = false
 			$http.get('/auth/user/' + id)
 				.success (data, status, headers, config) ->
-					if data.result == 0
+					if data.result == 1
 						$scope.userId = id
 						$scope.userDetails =
 							"email": data.data.email
@@ -182,7 +178,7 @@ define [ 'angular', 'ngRoute', 'ngCookies', 'angular-ui-bootstrap' ], (angular, 
 			if $scope.form == 'edit'
 				$http.put('/auth/user/' + $scope.userId, $scope.userDetails )
 					.success (data, status, headers, config) ->
-						if data.result == 0
+						if data.result == 1
 							$scope.disabled = false
 							search()
 						else
@@ -193,7 +189,7 @@ define [ 'angular', 'ngRoute', 'ngCookies', 'angular-ui-bootstrap' ], (angular, 
 			else
 				$http.post( '/auth/create', $scope.userDetails )
 					.success (data, status, headers, config) ->
-						if data.result == 0
+						if data.result == 1
 							$scope.form = false
 							$scope.disabled = false
 							search()
@@ -226,7 +222,7 @@ define [ 'angular', 'ngRoute', 'ngCookies', 'angular-ui-bootstrap' ], (angular, 
 			if $scope.name.length > 0
 				$http.post('/feeds/prefix', {search: $scope.name})
 					.success (data, status, headers, config) ->
-						if data.result == 0
+						if data.result == 1
 							$scope.matches = data.data.feeds.length
 							$scope.feeds = data.data.feeds
 			else
@@ -267,7 +263,7 @@ define [ 'angular', 'ngRoute', 'ngCookies', 'angular-ui-bootstrap' ], (angular, 
 		$scope.remove = ->
 			$http.get('/feeds/remove/' + $scope.feedId)
 				.success (data, status, headers, config) ->
-					if data.result == 0
+					if data.result == 1
 						$scope.form = false
 						search()
 		
@@ -290,7 +286,7 @@ define [ 'angular', 'ngRoute', 'ngCookies', 'angular-ui-bootstrap' ], (angular, 
 			$scope.error = false
 			$http.get('/feeds/' + id)
 				.success (data, status, headers, config) ->
-					if data.result == 0
+					if data.result == 1
 						$scope.feedId = id
 						$scope.feedDetails =
 							"category": data.data.category
@@ -321,17 +317,18 @@ define [ 'angular', 'ngRoute', 'ngCookies', 'angular-ui-bootstrap' ], (angular, 
 			if $scope.form == 'edit'
 				$http.put('/feeds/' + $scope.feedId, $scope.feedDetails )
 					.success (data, status, headers, config) ->
-						if data.result == 0
+						if data.result == 1
 							$scope.disabled = false
 							search()
 						else
 							$scope.error = data.message
 					.error (data, status, headers, config) ->
-						$scope.error = "Oops! Problem editing feed. Try again."
+						$scope.error = "Oops! Problem editing feed. Please try again."
+						$scope.disabled = false
 			else
 				$http.post( '/feeds/create', $scope.feedDetails )
 					.success (data, status, headers, config) ->
-						if data.result == 0
+						if data.result == 1
 							$scope.form = false
 							$scope.disabled = false
 							search()
@@ -339,7 +336,8 @@ define [ 'angular', 'ngRoute', 'ngCookies', 'angular-ui-bootstrap' ], (angular, 
 							$scope.disabled = false
 							$scope.error = data.message
 					.error (data, status, headers, config) ->
-						$scope.error = "Oops! Problem editing feed. Try again."
+						$scope.error = "Oops! Problem adding feed. Please try again."
+						$scope.disabled = false
 
 		$scope.getLocation = (val) ->
 			$http.get 'http://maps.googleapis.com/maps/api/geocode/json',
