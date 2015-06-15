@@ -41,8 +41,8 @@
 			</ul>
 		</div>
 		
-		<div class="admin-right" ng-show="form">
-			<form ng-submit="formSubmit()">
+		<div class="admin-right">
+			<form ng-submit="formSubmit()" ng-show="form">
 				<h2 class="text-center">{{form == 'edit' ? "Edit" : "Create"}} feed</h2>
 
 				<div class="row">
@@ -111,6 +111,10 @@
 
 			<div class="alert alert-danger" ng-show="error">
 				<span class="glyphicon glyphicon-exclamation-sign"></span> {{error}}
+			</div>
+
+			<div class="alert alert-success" ng-show="message">
+				{{message}}
 			</div>
 		</div>
 	</div>
