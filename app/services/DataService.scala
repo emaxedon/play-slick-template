@@ -23,6 +23,8 @@ class DataTable(tag: Tag) extends Table[Data](tag, "datas") {
 	def feed = foreignKey("datas_feed_fk", feedId, TableQuery[FeedTable])(_.id, onDelete=ForeignKeyAction.Cascade)
 
 	def * = (id.?, feedId, version, network, media, mediaUrl, previewUrl, text, date) <> (Data.tupled, Data.unapply)
+	
+	def idx = index("datas_date_idx", date)
 }
 
 object DataService {

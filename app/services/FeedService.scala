@@ -18,6 +18,7 @@ import helpers._
 import java.net.URLEncoder
 import java.text.Normalizer
 
+
 class FeedTable(tag: Tag) extends Table[Feed](tag, "feeds") {
 
 	def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
