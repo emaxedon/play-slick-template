@@ -154,12 +154,14 @@ define [ 'angular', 'ngRoute', 'angular-ui-bootstrap' ], (angular) ->
 				"location": ""
 			$scope.disabled = false
 			$scope.error = false
+			$scope.message = false
 			$scope.form = 'create'
 
 		$scope.cancel = -> $scope.form = false
 		
 		$scope.edit = (id) ->
 			$scope.error = false
+			$scope.message = false
 			$http.get('/auth/user/' + id)
 				.success (data, status, headers, config) ->
 					if data.result == 1
@@ -174,12 +176,15 @@ define [ 'angular', 'ngRoute', 'angular-ui-bootstrap' ], (angular) ->
 			
 		$scope.formSubmit = ->
 			$scope.disabled = true
+			$scope.error = false
+			$scope.message = false
 
 			if $scope.form == 'edit'
 				$http.put('/auth/user/' + $scope.userId, $scope.userDetails )
 					.success (data, status, headers, config) ->
 						if data.result == 1
 							$scope.disabled = false
+							$scope.message = "Successfully updated user."
 							search()
 						else
 							$scope.error = data.message
@@ -192,6 +197,7 @@ define [ 'angular', 'ngRoute', 'angular-ui-bootstrap' ], (angular) ->
 						if data.result == 1
 							$scope.form = false
 							$scope.disabled = false
+							$scope.message = "Successfully created new user."
 							search()
 						else
 							$scope.error = data.message
