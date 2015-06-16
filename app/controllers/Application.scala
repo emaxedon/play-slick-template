@@ -13,4 +13,8 @@ object Application extends Controller with Secured {
   	Ok(views.html.admin.index("Admin"))
   }
 
+  def reset = Action { 
+  	Ok(views.html.reset("Reset password"))
+  }
+
 }

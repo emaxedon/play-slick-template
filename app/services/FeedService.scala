@@ -5,7 +5,8 @@ import scala.slick.driver.PostgresDriver.simple._
 import play.api.Play.current
 import play.api.libs.ws._
 import play.api.libs.oauth._
-import scala.concurrent.Future
+import scala.concurrent.{Future, Await}
+import scala.concurrent.duration._
 import play.api.Logger
 import play.api.libs.json._
 import com.typesafe.config._
@@ -15,6 +16,8 @@ import models.{FeedDetails, Feed, Data}
 import util._
 import helpers._
 import java.net.URLEncoder
+import java.text.Normalizer
+
 
 class FeedTable(tag: Tag) extends Table[Feed](tag, "feeds") {
 
@@ -22,6 +25,7 @@ class FeedTable(tag: Tag) extends Table[Feed](tag, "feeds") {
 	def version = column[Long]("version", O.NotNull)
 	def category = column[String]("category", O.NotNull)
 	def name = column[String]("name", O.NotNull)
+	def facebookCover = column[Option[String]]("facebook_cover")
 	def facebookApi = column[Option[String]]("facebook_api")
 	def twitterApi = column[Option[String]]("twitter_api")
 	def instagramApi = column[Option[String]]("instagram_api")
@@ -32,7 +36,7 @@ class FeedTable(tag: Tag) extends Table[Feed](tag, "feeds") {
 	def latitude = column[Double]("latitude", O.NotNull)
 	def longitude = column[Double]("longitude", O.NotNull)
 
-	def * = (id.?, version, category, name, facebookApi, twitterApi, instagramApi, youtubeApi, dateCreated, dateUpdated, location, latitude, longitude) <>
+	def * = (id.?, version, category, name, facebookCover, facebookApi, twitterApi, instagramApi, youtubeApi, dateCreated, dateUpdated, location, latitude, longitude) <>
 		(Feed.tupled, Feed.unapply)
 }
 
@@ -92,10 +96,36 @@ object FeedService {
 	
 	def create(name: String, category: String, facebookApi: Option[String], twitterApi: Option[String],
 		instagramApi: Option[String], youtubeApi: Option[String], location: String, geo: Geo): Option[Feed] = db.withSession { implicit session =>
+		val FACEBOOK_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZ")
+		val TWITTER_DATE_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZ yyyy")
+		val YOUTUBE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX")
+
 		val feedId = (feeds returning feeds.map(_.id)) +=
 			Feed(
 				category = category,
 				name = name,
+				facebookCover = facebookApi match { 
+					case Some(pageName) =>
+						val accessToken = config.getString("facebook.accessToken")
+
+						var coverUrl = ""
+
+						Await.result(
+							WS.url("https://graph.facebook.com/search")
+								.withQueryString("q" -> Normalizer.normalize(pageName, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", ""), "type" -> "page", "access_token" -> accessToken).get().flatMap { response =>
+									(response.json \\ "id").headOption match {
+										case Some(pageid) =>
+											WS.url("https://graph.facebook.com/v2.3/" + pageid.as[String])
+												.withQueryString("access_token" -> accessToken, "fields" -> "cover").get().map { response =>
+													coverUrl = (response.json \ "cover" \ "source").as[String]
+												}
+										case None => Future(coverUrl = "")
+									}
+								}, Duration(5000, MILLISECONDS))
+
+						Some(coverUrl)
+					case None => None
+				},
 				facebookApi = facebookApi,
 				twitterApi = twitterApi,
 				instagramApi = instagramApi,
@@ -109,7 +139,7 @@ object FeedService {
 				val accessToken = config.getString("facebook.accessToken")
 
 				WS.url("https://graph.facebook.com/search")
-					.withQueryString("q" -> URLEncoder.encode(pageName, "UTF-8"), "type" -> "page", "access_token" -> accessToken).get().map { response =>
+					.withQueryString("q" -> Normalizer.normalize(pageName, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", ""), "type" -> "page", "access_token" -> accessToken).get().map { response =>
 						val pageid = ((response.json \\ "id").head.as[String])
 
 						WS.url("https://graph.facebook.com/v2.3/" + pageid + "/posts")
@@ -117,14 +147,21 @@ object FeedService {
 								val data = response.json \ "data"
 
 								for (e <- data.as[Seq[JsValue]]) {
-									val FACEBOOK_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ssZZZZ")
-
 									val timestamp = new Timestamp(FACEBOOK_DATE_FORMAT.parse((e \ "created_time").as[String]).getTime)
-									val text = (e \ "description").as[String]
-									val mediaUrl = (e \ "link").as[String]
-									val previewUrl = (e \ "link").as[String]
-									val dataType = (e \ "type").as[String]
-									
+									val text = (e \ "message").asOpt[String] match {
+										case Some(message) => message
+										case None => ""
+									}
+									val mediaUrl = (e \\ "link").headOption match {
+										case Some(link) => (e \\ "link").head.as[String]
+										case None => ""
+									}
+									val previewUrl = mediaUrl
+									val dataType = (e \\ "type").headOption match {
+										case Some(typ) => (e \\ "type").head.as[String]
+										case None => "link"
+									}
+
 									DataService.create(feedId, "facebook", dataType, mediaUrl, previewUrl, text, timestamp)
 								}
 							}
@@ -143,7 +180,6 @@ object FeedService {
 						val data = response.json
 
 						for (e <- data.as[Seq[JsValue]]) {
-							val TWITTER_DATE_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZ yyyy")
 
 							val timestamp = new Timestamp(TWITTER_DATE_FORMAT.parse((e \ "created_at").as[String]).getTime)
 							val text = (e \ "text").as[String]
@@ -184,7 +220,7 @@ object FeedService {
 											val timestamp = new Timestamp((e \ "created_time").as[String].toLong*1000)
 											val caption = (e \ "caption" \ "text").as[String]
 											val dataType = (e \ "type").as[String]
-											val mediaUrl =  (e \ "type").as[String] match {
+											val mediaUrl = dataType match {
 												case "image" =>
 													(e \ "images" \ "standard_resolution" \ "url").as[String]
 												case "video" =>
@@ -229,8 +265,6 @@ object FeedService {
 										val data = response.json
 
 										for (e <- (data \ "items").as[Seq[JsValue]]) {
-											val YOUTUBE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX")
-
 											val timestamp = new Timestamp(YOUTUBE_DATE_FORMAT.parse((e \ "snippet" \ "publishedAt").as[String]).getTime)
 											val text = (e \ "snippet" \ "description").as[String]
 											val mediaUrl = (e \ "id" \ "videoId").as[String]

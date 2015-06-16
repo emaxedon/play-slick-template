@@ -6,9 +6,6 @@ require.config
     'ngRoute': 
       deps: [ 'angular' ]
       exports: 'angular'
-    'ngCookies':
-      deps: [ 'angular' ]
-      exports: 'angular'
     'angular':
       deps: [ 'jquery' ]
       exports: 'angular'
@@ -20,7 +17,6 @@ require.config
     'bootstrap': 'lib/bootstrap/js/bootstrap.min'
     'angular': 'lib/angularjs/angular.min'
     'ngRoute': 'lib/angularjs/angular-route.min'
-    'ngCookies': 'lib/angularjs/angular-cookies.min'
     'angular-ui-bootstrap': 'lib/angular-ui-bootstrap/ui-bootstrap-tpls.min'
 
 require [
