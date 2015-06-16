@@ -12,7 +12,7 @@ GET     /webjars/*file                 controllers.WebJarAssets.at(file)
 
 GET     /admin                         controllers.Application.admin
 
-# GET     /reset                         controllers.Application.reset				
+GET     /reset                         controllers.Application.reset				
 
 # Auth API
 POST    /auth/login                    controllers.Authentication.login

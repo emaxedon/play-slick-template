@@ -16,15 +16,17 @@ import scala.concurrent.duration._
 object Mandrill extends Controller with Secured {
 
 	val config = ConfigFactory.load
-	val key = config.getString("smtp.password")
+	val mandrillKey = config.getString("smtp.password")
 
 	def send = IsAdministrator(parse.anyContent) { implicit user => implicit request =>
 		val email = Json.obj(
-			"key" -> key,
-			"text" -> "Example email",
-			"subject" -> "example subject",
-			"from_email" -> "emaxedon@gmail.com",
-			"to" -> Json.arr(Json.obj("email" -> "emaxedon@gmail.com"))
+			"key" -> mandrillKey,
+			"message" -> Json.obj(
+				"text" -> "Example email",
+				"subject" -> "Testing mandrill API",
+				"from_email" -> "emaxedon@gmail.com",
+				"to" -> Json.arr(Json.obj("email" -> "emaxedon@gmail.com"))
+			)
 		)
 
 		Await.result(WS.url("https://mandrillapp.com/api/1.0/messages/send.json").post(email).map { response =>

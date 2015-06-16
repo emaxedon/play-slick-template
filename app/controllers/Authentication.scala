@@ -7,12 +7,19 @@ import play.api.libs.json.Json._
 import play.api.libs.json._
 import play.api.libs.mailer._
 import play.api.Play.current
+import play.api.libs.ws._
 import play.api.Logger
+import com.typesafe.config._
 import models._
 import services._
 import helpers._
+import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Await
+import scala.concurrent.duration._
 
 object Authentication extends Controller with Secured {
+
+	val config = ConfigFactory.load
 
 	def login = Action(parse.json) { implicit request =>
 		request.body.validate[UserAuth].map { userAuth =>
@@ -122,9 +129,30 @@ object Authentication extends Controller with Secured {
 						Seq(userEmail),
 						bodyText = Some("Use the following link to login and then change your password: http://" + request.host + routes.Authentication.loginOnce(resetPassword.userId, resetPassword.passwordToken).toString)
 					)
-					MailerPlugin.send(email)
+					try {
+						MailerPlugin.send(email)
 
-					Ok(resultJson(1, "Success! Password has been reset and password token has been sent to your email.", JsNull))
+						Ok(resultJson(1, "Success! Password has been reset and password token has been sent to your email.", JsNull))
+					} catch {
+						case e: Exception =>
+							val mandrillKey = config.getString("smtp.password")
+
+							val emailJson = Json.obj(
+								"key" -> mandrillKey,
+								"message" -> Json.obj(
+									"text" -> ("Use the following link to login and then change your password: http://" + request.host + routes.Authentication.loginOnce(resetPassword.userId, resetPassword.passwordToken).toString),
+									"subject" -> "Password Reset",
+									"from_email" -> "emaxedon@gmail.com",
+									"to" -> Json.arr(Json.obj("email" -> userEmail))
+								)
+							)
+
+							Await.result(WS.url("https://mandrillapp.com/api/1.0/messages/send.json").post(emailJson).map { response =>
+								Logger.debug(Json.prettyPrint(response.json))
+
+								Ok(resultJson(1, "Success! Password has been reset and password token has been sent to your email.", JsNull))
+							}, Duration(5000, MILLISECONDS))
+					}
 				case None => Ok(resultJson(0, "Oops! Failed to reset password.", JsNull))
 			}
 		}.getOrElse(Ok(resultJson(0, "Oops! Invalid json.", JsNull)))

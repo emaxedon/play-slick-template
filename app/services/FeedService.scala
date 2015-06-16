@@ -69,11 +69,11 @@ object FeedService {
 		feeds.list
 	}
 	
-	def nearby(geo: Geo, radius: Double): Option[Feed] = db.withSession { implicit session =>
+	def nearby(geo: Geo, radius: Double): Seq[Feed] = db.withSession { implicit session =>
 		val (sw, ne) = geoBoundingBox( geo, radius )
 		
 		feeds.filter( f => f.latitude >= sw.latitude && f.latitude <= ne.latitude &&
-			f.longitude >= sw.longitude && f.longitude <= ne.longitude).list.headOption
+			f.longitude >= sw.longitude && f.longitude <= ne.longitude).list
 	}
 	
 	def find(id: Int): Option[Feed] = db.withSession { implicit session =>
