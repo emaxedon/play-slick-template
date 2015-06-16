@@ -13,7 +13,8 @@ import helpers._
 
 object Feeds extends Controller with Secured {
 
-	private def feedJson(feed: Feed) = toJson(new FeedJson(feed, FeedService.getChildren(feed.id.get), DataService.list(feed.id.get).map(new DataJson(_))))
+	private def feedDataJson(feed: Feed) = toJson(new FeedJson(feed, FeedService.getChildren(feed.id.get), DataService.list(feed.id.get).map(new DataJson(_))))
+	private def feedJson(feed: Feed) = toJson(new FeedJson(feed, FeedService.getChildren(feed.id.get), Seq.empty[DataJson]))
 	private def feedsJson(feeds: Seq[Feed]) = Json.obj("feeds" -> feeds.map(feedJson _))
 
 	def create = IsAdministrator(parse.json) { implicit user => implicit request =>
@@ -41,7 +42,7 @@ object Feeds extends Controller with Secured {
 
 	def find(feedId: Int) = IsAuthenticated(parse.anyContent) { implicit user => implicit request =>
 		FeedService.find(feedId) match {
-			case Some( f ) => Ok(resultJson(0, "feed by id", feedJson(f)))
+			case Some( f ) => Ok(resultJson(0, "feed by id", feedDataJson(f)))
 			case None => Ok(resultJson(1, "Oops! Non-existent feed.", JsNull))
 		}
 	}
