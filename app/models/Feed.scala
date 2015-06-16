@@ -51,10 +51,10 @@ case class FeedJson (
 	latitude: Double,
 	longitude: Double,
 	relatedFeeds: Seq[Int],
-	datas: Seq[DataJson]
+	feedData: Seq[DataJson]
 ) {
-	def this(f: Feed, relatedFeeds: Seq[Int], datas: Seq[DataJson]) = this(id = f.id.get, version = f.version, category = f.category, name = f.name, facebookCover = f.facebookCover, f.facebookApi, f.twitterApi, f.instagramApi, f.youtubeApi,
-		dateCreated = f.dateCreated, dateUpdated = f.dateUpdated, location = f.location, latitude = f.latitude, longitude = f.longitude, relatedFeeds = relatedFeeds, datas = datas)
+	def this(f: Feed, relatedFeeds: Seq[Int], feedData: Seq[DataJson]) = this(id = f.id.get, version = f.version, category = f.category, name = f.name, facebookCover = f.facebookCover, f.facebookApi, f.twitterApi, f.instagramApi, f.youtubeApi,
+		dateCreated = f.dateCreated, dateUpdated = f.dateUpdated, location = f.location, latitude = f.latitude, longitude = f.longitude, relatedFeeds = relatedFeeds, feedData = feedData)
 }
 
 /** Provides for JSON serializing/deserializing FeedJson instances */

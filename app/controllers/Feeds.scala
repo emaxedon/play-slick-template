@@ -78,10 +78,7 @@ object Feeds extends Controller with Secured {
 	
 	def nearby(radius: Double) = IsAuthenticated(parse.anyContent) { implicit user => implicit request =>
 		if (radius > 0 && radius <= 200)
-			FeedService.nearby(Geo(user.latitude, user.longitude), radius) match {
-				case Some(feed) => Ok(resultJson(1, "nearby feeds", feedJson(feed)))
-				case None => Ok(resultJson(0, "no nearby feeds", JsNull))
-			}
+			Ok(resultJson(0, "nearby feeds", feedsJson(FeedService.nearby(Geo(user.latitude, user.longitude), radius))))
 		else
 			Ok(resultJson(0, "Oops! search radius out of range (0 < radius <= 200).", JsNull))
 	}
