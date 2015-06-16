@@ -148,8 +148,6 @@ object Authentication extends Controller with Secured {
 							)
 
 							Await.result(WS.url("https://mandrillapp.com/api/1.0/messages/send.json").post(emailJson).map { response =>
-								Logger.debug(Json.prettyPrint(response.json))
-
 								Ok(resultJson(1, "Success! Password has been reset and password token has been sent to your email.", JsNull))
 							}, Duration(5000, MILLISECONDS))
 					}

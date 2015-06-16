@@ -42,8 +42,8 @@ object Feeds extends Controller with Secured {
 
 	def find(feedId: Int) = IsAuthenticated(parse.anyContent) { implicit user => implicit request =>
 		FeedService.find(feedId) match {
-			case Some( f ) => Ok(resultJson(0, "feed by id", feedDataJson(f)))
-			case None => Ok(resultJson(1, "Oops! Non-existent feed.", JsNull))
+			case Some( f ) => Ok(resultJson(1, "feed by id", feedDataJson(f)))
+			case None => Ok(resultJson(0, "Oops! Non-existent feed.", JsNull))
 		}
 	}
 
@@ -79,7 +79,7 @@ object Feeds extends Controller with Secured {
 	
 	def nearby(radius: Double) = IsAuthenticated(parse.anyContent) { implicit user => implicit request =>
 		if (radius > 0 && radius <= 200)
-			Ok(resultJson(0, "nearby feeds", feedsJson(FeedService.nearby(Geo(user.latitude, user.longitude), radius))))
+			Ok(resultJson(1, "nearby feeds", feedsJson(FeedService.nearby(Geo(user.latitude, user.longitude), radius))))
 		else
 			Ok(resultJson(0, "Oops! search radius out of range (0 < radius <= 200).", JsNull))
 	}

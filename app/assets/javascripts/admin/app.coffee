@@ -39,6 +39,8 @@ define [ 'angular', 'ngRoute', 'angular-ui-bootstrap' ], (angular) ->
 		]
 
 	app.controller 'ForgotPasswordController', ['$scope', '$http', ($scope, $http) ->
+		$scope.form = 'forgot'
+
 		$scope.submit = ->
 			$scope.disabled = true
 			$scope.info = "Sending password reset email..."
@@ -49,6 +51,7 @@ define [ 'angular', 'ngRoute', 'angular-ui-bootstrap' ], (angular) ->
 					if (data.result == 1)
 						$scope.info = false
 						$scope.message = "Password reset email has been sent"
+						$scope.form = false
 					else
 						$scope.error = data.message
 						$scope.message = false
