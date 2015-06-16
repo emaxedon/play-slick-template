@@ -47,6 +47,7 @@ POST    /feeds/create                  controllers.Feeds.create
 GET     /feeds/all                     controllers.Feeds.all
 GET     /feeds/count                   controllers.Feeds.count
 GET     /feeds/recent/:size            controllers.Feeds.recent(size: Int)
+GET     /feeds/search                  controllers.Feeds.search(q: String)
 POST    /feeds/prefix                  controllers.Feeds.prefix
 GET     /feeds/remove/:id              controllers.Feeds.remove(id: Int)
 GET     /feeds/nearby                  controllers.Feeds.nearby(radius: Double ?= 50)

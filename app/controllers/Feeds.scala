@@ -64,6 +64,10 @@ object Feeds extends Controller with Secured {
 		Ok(resultJson(1, "feed count", Json.obj("count" -> FeedService.count)))
 	}
 
+	def search(q: String) = IsAuthenticated(parse.anyContent) { implicit user => implicit request =>
+		Ok(resultJson(1, "feeds", feedsJson(FeedService.prefix(q))))
+	}
+
 	def prefix = IsAuthenticated(parse.json) { implicit user => implicit request =>
 		(request.body \ "search").asOpt[String].map { search =>
 			Ok(resultJson(1, "feeds", feedsJson(FeedService.prefix(search))))
