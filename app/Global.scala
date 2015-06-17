@@ -19,7 +19,6 @@ import models._
 import services._
 import helpers._
 
-
 object Global extends GlobalSettings {
 	case class Contact(
 		first: String,
