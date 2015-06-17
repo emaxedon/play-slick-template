@@ -15,6 +15,14 @@ object Feeds extends Controller with Secured {
 
 	private def feedJson(feed: Feed) = toJson(new FeedJson(feed, FeedService.getChildren(feed.id.get), DataService.list(feed.id.get).map(new DataJson(_))))
 	private def feedsJson(feeds: Seq[Feed]) = Json.obj("feeds" -> feeds.map(feedJson _))
+	
+	private def feedJsonPage(feed: Feed, data: Seq[Data]) = toJson(new FeedJson(feed, FeedService.getChildren(feed.id.get), data.map(new DataJson(_))))
+		
+	private def feedsJsonPage(feeds: Seq[Feed], page: Int, pageSize: Int) = {
+		val dataPage = DataService.listPage(feeds.map(_.id.get), page, pageSize)
+		
+		Json.obj("feeds" -> feeds.map(f => feedJsonPage(f, dataPage.filter(_.feedId == f.id.get))))
+	}
 
 	def create = IsAdministrator(parse.json) { implicit user => implicit request =>
 		request.body.validate[FeedDetails].map { details =>

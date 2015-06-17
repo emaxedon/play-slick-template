@@ -41,6 +41,11 @@ object DataService {
 		datas.filter(_.feedId === feedId).sortBy(_.date.desc).list
 	}
 
+	// page is 1 based (i.e. first page is page #1)
+	def listPage(feedIds: Seq[Int], page: Int, pageSize: Int): Seq[Data] = db.withSession { implicit session =>
+		datas.sortBy(_.date.desc).filter(_.feedId inSetBind feedIds).drop((page - 1)*pageSize).take(pageSize).list
+	}
+
 	def create(feedId: Int, network: String, media: String, mediaUrl: String, previewUrl: String, text: String, date: Timestamp): Option[Data] = db.withSession { implicit session =>
 		val dataId = (datas returning datas.map(_.id)) +=
 			Data(
