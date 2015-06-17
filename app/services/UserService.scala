@@ -134,7 +134,9 @@ object UserService {
 		}
 	}
 	
-	def following(userId: Int): Seq[(Int, Int)] = db.withSession { implicit session => userFeeds.filter(_.userId === userId).list }
+	def following(userId: Int): Seq[Int] = db.withSession { implicit session => 
+		userFeeds.filter(_.userId === userId).map(_.feedId).list
+	}
 	
 	def follow(userId: Int, feedId: Int) = db.withSession { implicit session =>
 		userFeeds += (userId, feedId)

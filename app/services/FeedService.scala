@@ -80,6 +80,10 @@ object FeedService {
 		feeds.filter(_.id === id).list.headOption
 	}
 
+	def find(feedIds: Seq[Int]): Seq[Feed] = db.withSession { implicit session =>
+		feeds.filter(_.id inSetBind feedIds).list
+	}
+
 	def remove(id: Int) = db.withSession { implicit session => feeds.filter(_.id === id).delete }
 	
 	def prefix(s: String) = db.withSession { implicit session =>
