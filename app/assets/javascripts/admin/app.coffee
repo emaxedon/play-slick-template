@@ -39,6 +39,8 @@ define [ 'angular', 'ngRoute', 'angular-ui-bootstrap' ], (angular) ->
 		]
 
 	app.controller 'ForgotPasswordController', ['$scope', '$http', ($scope, $http) ->
+		$scope.form = 'forgot'
+
 		$scope.submit = ->
 			$scope.disabled = true
 			$scope.info = "Sending password reset email..."
@@ -49,6 +51,7 @@ define [ 'angular', 'ngRoute', 'angular-ui-bootstrap' ], (angular) ->
 					if (data.result == 1)
 						$scope.info = false
 						$scope.message = "Password reset email has been sent"
+						$scope.form = false
 					else
 						$scope.error = data.message
 						$scope.message = false
@@ -140,10 +143,14 @@ define [ 'angular', 'ngRoute', 'angular-ui-bootstrap' ], (angular) ->
 				$scope.users = []
 				
 		$scope.remove = ->
+			$scope.error = false
+			$scope.message = false
+
 			$http.get('/auth/remove/' + $scope.userId)
 				.success (data, status, headers, config) ->
 					if data.result == 1
 						$scope.form = false
+						$scope.message = "Successfully deleted user."
 						search()
 		
 		$scope.create = ->
@@ -267,10 +274,14 @@ define [ 'angular', 'ngRoute', 'angular-ui-bootstrap' ], (angular) ->
 				$scope.feeds = []
 				
 		$scope.remove = ->
+			$scope.error = false
+			$scope.message = false
+
 			$http.get('/feeds/remove/' + $scope.feedId)
 				.success (data, status, headers, config) ->
 					if data.result == 1
 						$scope.form = false
+						$scope.message = "Successfully deleted feed."
 						search()
 		
 		$scope.create = ->
@@ -284,12 +295,15 @@ define [ 'angular', 'ngRoute', 'angular-ui-bootstrap' ], (angular) ->
 				"location": ""
 			$scope.disabled = false
 			$scope.error = false
+			$scope.message = false
 			$scope.form = 'create'
 
 		$scope.cancel = -> $scope.form = false
 		
 		$scope.edit = (id) ->
 			$scope.error = false
+			$scope.message = false
+
 			$http.get('/feeds/' + id)
 				.success (data, status, headers, config) ->
 					if data.result == 1
@@ -307,6 +321,8 @@ define [ 'angular', 'ngRoute', 'angular-ui-bootstrap' ], (angular) ->
 		
 		$scope.formSubmit = ->
 			$scope.disabled = true
+			$scope.error = false
+			$scope.message = false
 			
 			if $scope.feedDetails['facebookApi'] == ""
 				delete $scope.feedDetails['facebookApi']
@@ -325,6 +341,7 @@ define [ 'angular', 'ngRoute', 'angular-ui-bootstrap' ], (angular) ->
 					.success (data, status, headers, config) ->
 						if data.result == 1
 							$scope.disabled = false
+							$scope.message = "Successfully updated feed."
 							search()
 						else
 							$scope.error = data.message
@@ -337,6 +354,7 @@ define [ 'angular', 'ngRoute', 'angular-ui-bootstrap' ], (angular) ->
 						if data.result == 1
 							$scope.form = false
 							$scope.disabled = false
+							$scope.message = "Successfully created new feed."
 							search()
 						else
 							$scope.disabled = false

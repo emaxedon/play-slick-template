@@ -13,7 +13,8 @@ import helpers._
 
 object Feeds extends Controller with Secured {
 
-	private def feedJson(feed: Feed) = toJson(new FeedJson(feed, FeedService.getChildren(feed.id.get), DataService.list(feed.id.get).map(new DataJson(_))))
+	private def feedDataJson(feed: Feed) = toJson(new FeedJson(feed, FeedService.getChildren(feed.id.get), DataService.list(feed.id.get).map(new DataJson(_))))
+	private def feedJson(feed: Feed) = toJson(new FeedJson(feed, FeedService.getChildren(feed.id.get), Seq.empty[DataJson]))
 	private def feedsJson(feeds: Seq[Feed]) = Json.obj("feeds" -> feeds.map(feedJson _))
 	
 	private def feedJsonPage(feed: Feed, data: Seq[Data]) = toJson(new FeedJson(feed, FeedService.getChildren(feed.id.get), data.map(new DataJson(_))))
@@ -49,7 +50,7 @@ object Feeds extends Controller with Secured {
 
 	def find(feedId: Int) = IsAuthenticated(parse.anyContent) { implicit user => implicit request =>
 		FeedService.find(feedId) match {
-			case Some( f ) => Ok(resultJson(1, "feed by id", feedJson(f)))
+			case Some( f ) => Ok(resultJson(1, "feed by id", feedDataJson(f)))
 			case None => Ok(resultJson(0, "Oops! Non-existent feed.", JsNull))
 		}
 	}
@@ -71,6 +72,10 @@ object Feeds extends Controller with Secured {
 		Ok(resultJson(1, "feed count", Json.obj("count" -> FeedService.count)))
 	}
 
+	def search(q: String) = IsAuthenticated(parse.anyContent) { implicit user => implicit request =>
+		Ok(resultJson(1, "feeds", feedsJson(FeedService.prefix(q))))
+	}
+
 	def prefix = IsAuthenticated(parse.json) { implicit user => implicit request =>
 		(request.body \ "search").asOpt[String].map { search =>
 			Ok(resultJson(1, "feeds", feedsJson(FeedService.prefix(search))))
@@ -86,10 +91,7 @@ object Feeds extends Controller with Secured {
 	
 	def nearby(radius: Double) = IsAuthenticated(parse.anyContent) { implicit user => implicit request =>
 		if (radius > 0 && radius <= 200)
-			FeedService.nearby(Geo(user.latitude, user.longitude), radius) match {
-				case Some(feed) => Ok(resultJson(1, "nearby feeds", feedJson(feed)))
-				case None => Ok(resultJson(0, "no nearby feeds", JsNull))
-			}
+			Ok(resultJson(1, "nearby feeds", feedsJson(FeedService.nearby(Geo(user.latitude, user.longitude), radius))))
 		else
 			Ok(resultJson(0, "Oops! search radius out of range (0 < radius <= 200).", JsNull))
 	}

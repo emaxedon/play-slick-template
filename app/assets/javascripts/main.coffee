@@ -24,6 +24,15 @@ require [
           dataType: 'json'
           data: JSON.stringify({ password: password })
           success: (data) ->
-            console.log('password updated')
+            $('.alert:not(.hide)').addClass('hide')
+            $('.alert-success')
+              .removeClass('hide')
+              .append('Success! You have modified your password.')
+            $('#form-reset').hide()
+      else
+        $('.alert:not(.hide)').addClass('hide')
+        $('.alert-danger')
+          .removeClass('hide')
+          .append('Passwords do not match.')
 
       return false
