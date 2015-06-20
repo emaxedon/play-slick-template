@@ -20,7 +20,11 @@ object Facebook extends Controller with Secured {
 
 	def search(pageName: String) = IsAdministrator(parse.anyContent) { implicit user => implicit request =>
 		Await.result(WS.url("https://graph.facebook.com/search")
-			.withQueryString("q" -> pageName, "type" -> "page", "access_token" -> accessToken).get().map { response =>
+			.withQueryString("q" -> pageName, 
+							 "type" -> "page", 
+							 "fields" -> "name,picture",
+							 "limit" -> "8",
+							 "access_token" -> accessToken).get().map { response =>
 				Ok(toJson(response.json))
 			}, Duration(10000, MILLISECONDS))
 	}
