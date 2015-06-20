@@ -48,7 +48,7 @@
 
 				<div class="form-group">
 					<label>Email</label>
-					<input type="email" ng-model="userDetails.email" id="inputEmail" class="form-control">
+					<input type="email" ng-model="userDetails.email" id="inputEmail" class="form-control" required>
 				</div>
 
 				<div class="form-group" ng-show="form == 'edit'">
@@ -71,7 +71,7 @@
 				<div class="form-group">
 					<label>Location</label>
 					<input type="text" ng-model="userDetails.location" ng-model-options="{ debounce: 250 }" id="inputLocation" class="form-control"
-						typeahead="address for address in getLocation($viewValue)">
+						typeahead="address for address in getLocation($viewValue)" required>
 				</div>
 
 				<div class="row">

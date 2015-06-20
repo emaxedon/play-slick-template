@@ -45,7 +45,10 @@ define [ 'appModule' ], (app) ->
 			$scope.message = false
 			$scope.form = 'create'
 
-		$scope.cancel = -> $scope.form = false
+		$scope.cancel = -> 
+			$scope.form = false
+			$scope.error = false
+			$scope.message = false
 		
 		$scope.edit = (id) ->
 			$scope.error = false
