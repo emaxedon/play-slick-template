@@ -22,23 +22,24 @@ define [ 'appModule' ], (app) ->
 				params:
 					callback: "JSON_CALLBACK"
 					q: val
+					count: "8"
 					client_id: "e7ac00adad054cde8d2ee7ea6956dc8e"
 			.then (response) ->
-				response.data.data.map( (u) -> u.username )
+				response.data.data.map( (item) -> [item.username, item.profile_picture] )
 
 		$scope.getTwitterUsername = (val) ->
 			$http.get '/twitter/search',
 				params:
 					screenName: val
 			.then (response) ->
-				response.data.map( (item) -> item.screen_name )
+				response.data.map( (item) -> [item.screen_name, item.profile_image_url] )
 
 		$scope.getFacebookPageName = (val) ->
 			$http.get '/facebook/search',
 				params:
 					pageName: val
 			.then (response) ->
-				response.data.data.map( (item) -> item.name )
+				response.data.data.map( (item) -> [item.name, item.picture.data.url] )
 			
 		$scope.change = ->
 			if $scope.name.length >= 3
