@@ -21,6 +21,7 @@ require.config
 		
 		'appModule': 'javascripts/admin/appModule'
 		'appService': 'javascripts/admin/services/appService'
+		'fileUploadService': 'javascripts/admin/services/fileUploadService'
 		'appRoute': 'javascripts/admin/appRoute'
 		'appForgotPasswordController': 'javascripts/admin/controllers/appForgotPasswordController'
 		'appLoginController': 'javascripts/admin/controllers/appLoginController'
