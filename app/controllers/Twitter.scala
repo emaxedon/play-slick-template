@@ -21,7 +21,7 @@ object Twitter extends Controller with Secured {
 
 	def search(screenName: String) = IsAdministrator(parse.anyContent) { implicit user => implicit request =>
 		Await.result(WS.url("https://api.twitter.com/1.1/users/search.json")
-			.withQueryString("q" -> screenName)
+			.withQueryString("q" -> screenName, "count" -> "8")
 			.sign(OAuthCalculator(key, credentials)).get().map { response =>
 				Ok(toJson(response.json))
 			}, Duration(10000, MILLISECONDS))

@@ -40,6 +40,13 @@
 				</li>
 			</ul>
 		</div>
+
+		<script type="text/ng-template" id="customTemplate.html">
+		  <a>
+		      <img ng-src="{{match.model[1]}}" width="32" height="32">
+		      <span bind-html-unsafe="match.model[0] | typeaheadHighlight:query"></span>
+		  </a>
+		</script>
 		
 		<div class="admin-right">
 			<form ng-submit="formSubmit()" ng-show="form">
@@ -64,33 +71,31 @@
 						<div class="form-group">
 							<label>Location</label>
 							<input type="text" ng-model="feedDetails.location" ng-model-options="{ debounce: 250 }" id="inputLocation" class="form-control"
-								typeahead="address for address in getLocation($viewValue)" required>
+								typeahead="item for item in getLocation($viewValue)" required>
 						</div>
 					</div>
 
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label>Facebook</label>
-							<input type="text" ng-model="feedDetails.facebookApi" ng-model-options="{ debounce: 250 }" id="inputFacebook" class="form-control" typeahead="address for address in getFacebookPageName($viewValue)">
+							<input type="text" ng-model="feedDetails.facebookApi" ng-model-options="{ debounce: 250 }" id="inputFacebook" class="form-control" typeahead="item for item in getFacebookPageName($viewValue)" typeahead-template-url="customTemplate.html" typeahead-input-formatter="$model[0]">
 						</div>
 
 						<div class="form-group">
 							<label>Twitter username</label>
 							<div class="input-group">
 								<span class="input-group-addon">&#64;</span>
-								<input type="text" ng-model="feedDetails.twitterApi" ng-model-options="{ debounce: 250 }" id="inputTwitter"
-								class="form-control" typeahead="address for address in getTwitterUsername($viewValue)">
+								<input type="text" ng-model="feedDetails.twitterApi" ng-model-options="{ debounce: 250 }" id="inputTwitter" class="form-control" typeahead="item for item in getTwitterUsername($viewValue)" typeahead-template-url="customTemplate.html" typeahead-input-formatter="$model[0]">
 							</div>
 						</div>
 
 						<div class="form-group">
 							<label>Instagram username</label>
-							<input type="text" ng-model="feedDetails.instagramApi" ng-model-options="{ debounce: 250 }" id="inputInstagram" 
-								class="form-control" typeahead="address for address in getInstagramUsername($viewValue)">
+							<input type="text" ng-model="feedDetails.instagramApi" ng-model-options="{ debounce: 250 }" id="inputInstagram" class="form-control" typeahead="item for item in getInstagramUsername($viewValue)" typeahead-template-url="customTemplate.html" typeahead-input-formatter="$model[0]">
 						</div>
 
 						<div class="form-group">
-							<label>Youtube</label>
+							<label>YouTube</label>
 							<input type="text" ng-model="feedDetails.youtubeApi" id="inputYoutube" class="form-control">
 						</div>
 					</div>
