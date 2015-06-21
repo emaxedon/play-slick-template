@@ -1,7 +1,7 @@
 define [
-	'appModule'
 	'appService'
 	'fileUploadService'
+	'fileModel'
 	'appRoute'
 	'appForgotPasswordController'
 	'appLoginController'
