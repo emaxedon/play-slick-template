@@ -48,6 +48,12 @@ object Feeds extends Controller with Secured {
 		Ok(resultJson(1, "user feeds", feedsJson(FeedService.findByUser(user.id.get))))
 	}
 
+	def paginate(page: Int, pageSize: Int) = IsAuthenticated(parse.anyContent) { implicit user => implicit request =>
+		val feeds = FeedService.find(UserService.following(user.id.get))
+
+		Ok(resultJson(1, "user feed data", feedsJsonPage(feeds, page, pageSize)))
+	}
+
 	def find(feedId: Int) = IsAuthenticated(parse.anyContent) { implicit user => implicit request =>
 		FeedService.find(feedId) match {
 			case Some( f ) => Ok(resultJson(1, "feed by id", feedDataJson(f)))

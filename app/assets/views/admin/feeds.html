@@ -78,20 +78,20 @@
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label>Facebook</label>
-							<input type="text" ng-model="feedDetails.facebookApi" ng-model-options="{ debounce: 250 }" id="inputFacebook" class="form-control" typeahead="item for item in getFacebookPageName($viewValue)" typeahead-template-url="customTemplate.html" typeahead-input-formatter="$model[0]">
+							<input type="text" ng-model="feedDetails.facebookApi" ng-model-options="{ debounce: 250 }" id="inputFacebook" class="form-control" typeahead="item for item in getFacebookPageName($viewValue)" typeahead-template-url="customTemplate.html" typeahead-on-select="onFacebookSelect($item, $model, $label)">
 						</div>
 
 						<div class="form-group">
 							<label>Twitter username</label>
 							<div class="input-group">
 								<span class="input-group-addon">&#64;</span>
-								<input type="text" ng-model="feedDetails.twitterApi" ng-model-options="{ debounce: 250 }" id="inputTwitter" class="form-control" typeahead="item for item in getTwitterUsername($viewValue)" typeahead-template-url="customTemplate.html" typeahead-input-formatter="$model[0]">
+								<input type="text" ng-model="feedDetails.twitterApi" ng-model-options="{ debounce: 250 }" id="inputTwitter" class="form-control" typeahead="item for item in getTwitterUsername($viewValue)" typeahead-template-url="customTemplate.html" typeahead-on-select="onTwitterSelect($item, $model, $label)">
 							</div>
 						</div>
 
 						<div class="form-group">
 							<label>Instagram username</label>
-							<input type="text" ng-model="feedDetails.instagramApi" ng-model-options="{ debounce: 250 }" id="inputInstagram" class="form-control" typeahead="item for item in getInstagramUsername($viewValue)" typeahead-template-url="customTemplate.html" typeahead-input-formatter="$model[0]">
+							<input type="text" ng-model="feedDetails.instagramApi" ng-model-options="{ debounce: 250 }" id="inputInstagram" class="form-control" typeahead="item for item in getInstagramUsername($viewValue)" typeahead-template-url="customTemplate.html" typeahead-on-select="onInstagramSelect($item, $model, $label)">
 						</div>
 
 						<div class="form-group">

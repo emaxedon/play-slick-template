@@ -43,6 +43,7 @@ GET     /facebook/search               controllers.Facebook.search(pageName: Str
 
 # Feeds API
 GET     /feeds                         controllers.Feeds.list
+GET     /feeds/data                    controllers.Feeds.paginate(page: Int ?= 1, pageSize: Int ?= 10)
 POST    /feeds/create                  controllers.Feeds.create
 GET     /feeds/all                     controllers.Feeds.all
 GET     /feeds/count                   controllers.Feeds.count

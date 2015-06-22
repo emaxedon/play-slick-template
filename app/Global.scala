@@ -14,6 +14,8 @@ import play.api.libs.json._
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.text.Normalizer
+import play.api.libs.json.Json._
+import play.api.libs.json._
 
 import models._
 import services._
@@ -92,5 +94,11 @@ object Global extends GlobalSettings {
 			UserService.follow( 1, 2 )
 		
 		Logger.info( "done initializing" )
+
+		// val mailchimpKey = config.getString("mailchimp.apiKey")
+
+		// WS.url("https://us11.api.mailchimp.com/3.0/lists/c46ee56979/members")
+		// 	.withAuth("emaxedon", mailchimpKey, WSAuthScheme.BASIC)
+		// 	.post(toJson(Json.obj("email_address" -> "emaxedon@gmail.com", "status" -> "subscribed")))
 	}
 }
