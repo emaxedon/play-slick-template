@@ -13,16 +13,11 @@ import helpers._
 
 object Feeds extends Controller with Secured {
 
-	private def feedDataJson(feed: Feed) = toJson(new FeedJson(feed, FeedService.getChildren(feed.id.get), DataService.list(feed.id.get).map(new DataJson(_))))
-	private def feedJson(feed: Feed) = toJson(new FeedJson(feed, FeedService.getChildren(feed.id.get), Seq.empty[DataJson]))
+	private def feedJson(feed: Feed) = toJson(new FeedJson(feed, FeedService.getChildren(feed.id.get)))
 	private def feedsJson(feeds: Seq[Feed]) = Json.obj("feeds" -> feeds.map(feedJson _))
-	
-	private def feedJsonPage(feed: Feed, data: Seq[Data]) = toJson(new FeedJson(feed, FeedService.getChildren(feed.id.get), data.map(new DataJson(_))))
-		
-	private def feedsJsonPage(feeds: Seq[Feed], page: Int, pageSize: Int) = {
-		val dataPage = DataService.listPage(feeds.map(_.id.get), page, pageSize)
-		
-		Json.obj("feeds" -> feeds.map(f => feedJsonPage(f, dataPage.filter(_.feedId == f.id.get))))
+
+	private def timelineJson(feeds: Seq[Feed], page: Int, pageSize: Int) = {
+		Json.obj("timeline" -> DataService.listPage(feeds.map(_.id.get), page, pageSize).map(new DataJson(_)))
 	}
 
 	def create = IsAdministrator(parse.json) { implicit user => implicit request =>
@@ -48,15 +43,49 @@ object Feeds extends Controller with Secured {
 		Ok(resultJson(1, "user feeds", feedsJson(FeedService.findByUser(user.id.get))))
 	}
 
-	def paginate(page: Int, pageSize: Int) = IsAuthenticated(parse.anyContent) { implicit user => implicit request =>
+	def popular = IsAuthenticated(parse.anyContent) { implicit user => implicit request =>
+		Ok(resultJson(1, "popular feeds", feedsJson(FeedService.listPopular)))
+	}
+
+	def addPopular(feedId: Int) = IsAdministrator(parse.anyContent) { implicit user => implicit request =>
+		FeedService.addPopular(feedId)
+
+		Ok(resultJson(1, "feed has been made popular", JsNull))
+	}
+
+	def removePopular(feedId: Int) = IsAdministrator(parse.anyContent) { implicit user => implicit request =>
+		FeedService.removePopular(feedId) match {
+			case true => Ok(resultJson(1, "feed has been removed from popular feeds", JsNull))
+			case false => Ok(resultJson(0, "Oops! Something went wrong.", JsNull))
+		}
+	}
+
+	def trending = IsAuthenticated(parse.anyContent) { implicit user => implicit request =>
+		Ok(resultJson(1, "trending feeds", feedsJson(FeedService.listTrending)))
+	}
+
+	def addTrending(feedId: Int) = IsAdministrator(parse.anyContent) { implicit user => implicit request =>
+		FeedService.addTrending(feedId)
+
+		Ok(resultJson(1, "feed has been made trending", JsNull))
+	}
+
+	def removeTrending(feedId: Int) = IsAdministrator(parse.anyContent) { implicit user => implicit request =>
+		FeedService.removeTrending(feedId) match {
+			case true => Ok(resultJson(1, "feed has been removed from trending feeds", JsNull))
+			case false => Ok(resultJson(0, "Oops! Something went wrong.", JsNull))
+		}
+	}
+
+	def userTimeline(page: Int, pageSize: Int) = IsAuthenticated(parse.anyContent) { implicit user => implicit request =>
 		val feeds = FeedService.find(UserService.following(user.id.get))
 
-		Ok(resultJson(1, "user feed data", feedsJsonPage(feeds, page, pageSize)))
+		Ok(resultJson(1, "user feeds timeline", timelineJson(feeds, page, pageSize)))
 	}
 
 	def find(feedId: Int) = IsAuthenticated(parse.anyContent) { implicit user => implicit request =>
 		FeedService.find(feedId) match {
-			case Some( f ) => Ok(resultJson(1, "feed by id", feedDataJson(f)))
+			case Some( f ) => Ok(resultJson(1, "feed by id", feedJson(f)))
 			case None => Ok(resultJson(0, "Oops! Non-existent feed.", JsNull))
 		}
 	}

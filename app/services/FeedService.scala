@@ -25,6 +25,7 @@ class FeedTable(tag: Tag) extends Table[Feed](tag, "feeds") {
 	def version = column[Long]("version", O.NotNull)
 	def category = column[String]("category", O.NotNull)
 	def name = column[String]("name", O.NotNull)
+	def facebookPicture = column[Option[String]]("facebook_picture")
 	def facebookCover = column[Option[String]]("facebook_cover")
 	def facebookApi = column[Option[String]]("facebook_api")
 	def twitterApi = column[Option[String]]("twitter_api")
@@ -36,7 +37,7 @@ class FeedTable(tag: Tag) extends Table[Feed](tag, "feeds") {
 	def latitude = column[Double]("latitude", O.NotNull)
 	def longitude = column[Double]("longitude", O.NotNull)
 
-	def * = (id.?, version, category, name, facebookCover, facebookApi, twitterApi, instagramApi, youtubeApi, dateCreated, dateUpdated, location, latitude, longitude) <>
+	def * = (id.?, version, category, name, facebookPicture, facebookCover, facebookApi, twitterApi, instagramApi, youtubeApi, dateCreated, dateUpdated, location, latitude, longitude) <>
 		(Feed.tupled, Feed.unapply)
 }
 
@@ -53,6 +54,26 @@ class FeedRelateTable(tag: Tag) extends Table[(Int, Int)](tag, "feed_relates") {
 	def * = (parentFeedId, childFeedId)
 }
 
+class FeedPopularTable(tag: Tag) extends Table[(Int, Timestamp)](tag, "feed_populars") {
+
+	def feedId = column[Int]("feed_id", O.NotNull)
+	def dateCreated = column[Timestamp]("date_created", O.NotNull)
+
+	def idx = index("feed_populars_idx_a", feedId, unique = true)
+
+	def * = (feedId, dateCreated)
+}
+
+class FeedTrendingTable(tag: Tag) extends Table[(Int, Timestamp)](tag, "feed_trendings") {
+
+	def feedId = column[Int]("feed_id", O.NotNull)
+	def dateCreated = column[Timestamp]("date_created", O.NotNull)
+
+	def idx = index("feed_trendings_idx_a", feedId, unique = true)
+
+	def * = (feedId, dateCreated)
+}
+
 object FeedService {
 
 	val config = ConfigFactory.load
@@ -63,10 +84,22 @@ object FeedService {
 
 	val feedRelates = TableQuery[FeedRelateTable]
 
+	val feedPopulars = TableQuery[FeedPopularTable]
+
+	val feedTrendings = TableQuery[FeedTrendingTable]
+
 	val db = play.api.db.slick.DB
 
 	def list: Seq[Feed] = db.withSession { implicit session =>
 		feeds.list
+	}
+
+	def listPopular: Seq[Feed] = db.withSession { implicit session =>
+		find(feedPopulars.list.map(_._1))
+	}
+
+	def listTrending: Seq[Feed] = db.withSession { implicit session =>
+		find(feedTrendings.list.map(_._1))
 	}
 	
 	def nearby(geo: Geo, radius: Double): Seq[Feed] = db.withSession { implicit session =>
@@ -104,39 +137,48 @@ object FeedService {
 		val TWITTER_DATE_FORMAT = new SimpleDateFormat("EEE MMM dd HH:mm:ss ZZZZ yyyy")
 		val YOUTUBE_DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSX")
 
-		val feedId = (feeds returning feeds.map(_.id)) +=
-			Feed(
-				category = category,
-				name = name,
-				facebookCover = facebookApi match { 
-					case Some(pageName) =>
-						val accessToken = config.getString("facebook.accessToken")
+		val facebookToken = config.getString("facebook.accessToken")
 
-						var coverUrl = ""
-
-						Await.result(
-							WS.url("https://graph.facebook.com/search")
-								.withQueryString("q" -> Normalizer.normalize(pageName, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", ""), "type" -> "page", "access_token" -> accessToken).get().flatMap { response =>
-									(response.json \\ "id").headOption match {
-										case Some(pageid) =>
-											WS.url("https://graph.facebook.com/v2.3/" + pageid.as[String])
-												.withQueryString("access_token" -> accessToken, "fields" -> "cover").get().map { response =>
-													coverUrl = (response.json \ "cover" \ "source").as[String]
-												}
-										case None => Future(coverUrl = "")
-									}
-								}, Duration(5000, MILLISECONDS))
-
-						Some(coverUrl)
-					case None => None
-				},
-				facebookApi = facebookApi,
-				twitterApi = twitterApi,
-				instagramApi = instagramApi,
-				youtubeApi = youtubeApi,
-				location = location,
-				latitude = geo.latitude,
-				longitude = geo.longitude)
+		val feedDetails = Await.result(
+			for {
+				pageid <- facebookApi match {
+					case Some(pageName) => 
+						WS.url("https://graph.facebook.com/search")
+							.withQueryString("q" -> Normalizer.normalize(pageName, Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", ""), "type" -> "page", "access_token" -> facebookToken).get().map { response =>
+								Some((response.json \\ "id").head.as[String])
+							}
+					case None => Future(None)
+				}
+				pictureUrl <- pageid match {
+					case Some(pageid) =>
+						WS.url("https://graph.facebook.com/v2.3/" + pageid)
+							.withQueryString("access_token" -> facebookToken, "fields" -> "picture").get().map { response =>
+								(response.json \ "picture" \ "data" \ "url").asOpt[String]
+							}
+					case None => Future(None)
+				}
+				coverUrl <- pageid match {
+					case Some(pageid) =>
+						WS.url("https://graph.facebook.com/v2.3/" + pageid)
+							.withQueryString("access_token" -> facebookToken, "fields" -> "cover").get().map { response =>
+								(response.json \ "cover" \ "source").asOpt[String]
+							}				
+					case None => Future(None)
+				}
+				feedId <- Future((feeds returning feeds.map(_.id)) +=
+							Feed(
+								category = category,
+								name = name,
+								facebookCover = coverUrl,
+								facebookPicture = pictureUrl,
+								facebookApi = facebookApi,
+								twitterApi = twitterApi,
+								instagramApi = instagramApi,
+								youtubeApi = youtubeApi,
+								location = location,
+								latitude = geo.latitude,
+								longitude = geo.longitude))
+			} yield (feedId, pictureUrl, coverUrl), Duration(15000, MILLISECONDS))
 
 		facebookApi match {
 			case Some(pageName) =>
@@ -166,7 +208,7 @@ object FeedService {
 										case None => "link"
 									}
 
-									DataService.create(feedId, "facebook", dataType, mediaUrl, previewUrl, text, timestamp)
+									DataService.create(feedDetails._1, name, feedDetails._2, feedDetails._3, "facebook", dataType, mediaUrl, previewUrl, text, timestamp)
 								}
 							}
 					}
@@ -200,7 +242,7 @@ object FeedService {
 								case None => ""
 							}
 
-							DataService.create(feedId, "twitter", dataType, mediaUrl, previewUrl, text, timestamp)
+							DataService.create(feedDetails._1, name, feedDetails._2, feedDetails._3, "twitter", dataType, mediaUrl, previewUrl, text, timestamp)
 						}
 					}
 			case None =>
@@ -233,7 +275,7 @@ object FeedService {
 											}
 											val previewUrl = (e \ "images" \ "standard_resolution" \ "url").as[String]
 											
-											DataService.create(feedId, "instagram", dataType, mediaUrl, previewUrl, caption, timestamp)
+											DataService.create(feedDetails._1, name, feedDetails._2, feedDetails._3, "instagram", dataType, mediaUrl, previewUrl, caption, timestamp)
 										}
 									case 400 =>
 										Logger.debug((response.json \ "meta" \ "error_message").as[String])
@@ -275,14 +317,14 @@ object FeedService {
 											val previewUrl = (e \ "snippet" \ "thumbnails" \ "default" \ "url").as[String]
 											val dataType = "video"
 
-											DataService.create(feedId, "youtube", dataType, mediaUrl, previewUrl, text, timestamp)
+											DataService.create(feedDetails._1, name, feedDetails._2, feedDetails._3, "youtube", dataType, mediaUrl, previewUrl, text, timestamp)
 										}
 									}
 						}
 			case None =>
 		}
 
-		find(feedId)
+		find(feedDetails._1)
 	}
 
 	def update(feedId: Int, details: FeedDetails) = db.withSession { implicit session =>
@@ -301,6 +343,22 @@ object FeedService {
 
 	def getChildren(feedId: Int): Seq[Int] = db.withSession { implicit session =>
 		feedRelates.filter(_.parentFeedId === feedId).list.map(_._2)
+	}
+
+	def addPopular(feedId: Int) = db.withSession { implicit session =>
+		feedPopulars += (feedId, now)
+	}
+
+	def removePopular(feedId: Int): Boolean = db.withSession { implicit session =>
+		feedPopulars.filter(_.feedId === feedId).delete > 0
+	}
+
+	def addTrending(feedId: Int) = db.withSession { implicit session =>
+		feedTrendings += (feedId, now)
+	}
+
+	def removeTrending(feedId: Int): Boolean = db.withSession { implicit session =>
+		feedTrendings.filter(_.feedId === feedId).delete > 0
 	}
 
 	def delete(feedId: Int): Boolean = db.withSession { implicit session =>

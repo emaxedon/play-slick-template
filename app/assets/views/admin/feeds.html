@@ -1,7 +1,8 @@
 <nav class="navbar navbar-default navbar-fixed-top">
 	<div class="container">
+		<!-- Brand and toggle get grouped for better mobile display -->
 		<div class="navbar-header">
-			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1" aria-expanded="false">
 			<span class="sr-only">Toggle navigation</span>
 			<span class="icon-bar"></span>
 			<span class="icon-bar"></span>
@@ -9,17 +10,34 @@
 			</button>
 			<a class="navbar-brand" href="#/dash">Admin</a>
 		</div>
-		<div id="navbar" class="collapse navbar-collapse">
+
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
 			<ul class="nav navbar-nav">
 				<li><a href="#/dash">Dashboard</a></li>
-				<li><a href="#/users">Users</a></li>
-				<li class="active"><a href="#/feeds">Feeds</a></li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Users <span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						<li><a href="#/users">Manage</a></li>
+						<li><a href="#">Import/Export</a></li>
+					</ul>
+				</li>
+				<li class="dropdown">
+					<a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Feeds <span class="caret"></span></a>
+					<ul class="dropdown-menu">
+						<li><a href="#/feeds">Manage</a></li>
+						<li><a href="#">Import/Export</a></li>
+						<li role="separator" class="divider"></li>
+						<li><a href="#">Popular</a></li>
+						<li><a href="#">Trending</a></li>
+					</ul>
+				</li>
 			</ul>
 			<ul class="nav navbar-nav navbar-right">
 				<li><a class="btn" ng-click="logout()">Logout</a></li>
 			</ul>
-		</div><!--/.nav-collapse -->
-	</div>
+		</div><!-- /.navbar-collapse -->
+	</div><!-- /.container -->
 </nav>
 
 <div class="admin-body">
@@ -29,8 +47,7 @@
 			<form ng-submit="submit()">
 				<div class="input-group">
 					<span class="input-group-addon">Find</span>
-					<input class="form-control" type="text" ng-change="change()" ng-model="name" ng-model-options="{ debounce: 250 }"
-						placeholder="Feed name"/>
+					<input class="form-control" type="text" ng-change="change()" ng-model="name" ng-model-options="{ debounce: 250 }" placeholder="Feed name" autofocus/>
 				</div>
 			</form>
 

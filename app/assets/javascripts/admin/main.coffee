@@ -34,6 +34,7 @@ require.config
 require [
 	'jquery'
 	'appBoot'
+	'bootstrap'
 ], ($, app) ->
 	$(document).ready ->
 		app.init()

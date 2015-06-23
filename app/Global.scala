@@ -95,6 +95,21 @@ object Global extends GlobalSettings {
 		
 		Logger.info( "done initializing" )
 
+		// val accessToken = config.getString("facebook.accessToken")
+
+		// for {
+		// 	pageid <- WS.url("https://graph.facebook.com/search")
+		// 					.withQueryString("q" -> Normalizer.normalize("elonmusk", Normalizer.Form.NFD).replaceAll("\\p{InCombiningDiacriticalMarks}+", ""), "type" -> "page", "access_token" -> accessToken).get().map { response =>
+		// 						(response.json \\ "id").head.as[String]
+		// 					}
+		// 	pictureUrl <- WS.url("https://graph.facebook.com/v2.3/" + pageid)
+		// 					.withQueryString("access_token" -> accessToken, "fields" -> "picture").get().map { response =>
+		// 						(response.json \ "picture" \ "data" \ "url").as[String]
+		// 					}
+		// } yield {
+		// 	Logger.debug(pictureUrl)
+		// }
+
 		// val mailchimpKey = config.getString("mailchimp.apiKey")
 
 		// WS.url("https://us11.api.mailchimp.com/3.0/lists/c46ee56979/members")
