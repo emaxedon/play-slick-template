@@ -91,5 +91,12 @@ object Global extends GlobalSettings {
 			UserService.follow( 1, 2 )
 		
 		Logger.info( "done initializing" )
+
+		// val mailchimpKey = config.getString("mailchimp.apiKey")
+
+		// WS.url("https://us11.api.mailchimp.com/3.0/lists/c46ee56979/members")
+		// 	.withAuth("emaxedon", mailchimpKey, WSAuthScheme.BASIC).get().map { response =>
+		// 		Logger.debug(Json.prettyPrint(response.json))
+		// 	}
 	}
 }
