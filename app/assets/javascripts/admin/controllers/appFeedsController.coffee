@@ -40,7 +40,16 @@ define [ 'appModule' ], (app) ->
 					pageName: val
 			.then (response) ->
 				response.data.data.map( (item) -> [item.name, item.picture.data.url] )
-			
+
+		$scope.onFacebookSelect = ($item, $model, $label) ->
+			$scope.feedDetails['facebookApi'] = $model[0]
+
+		$scope.onTwitterSelect = ($item, $model, $label) ->
+			$scope.feedDetails['twitterApi'] = $model[0]
+
+		$scope.onInstagramSelect = ($item, $model, $label) ->
+			$scope.feedDetails['instagramApi'] = $model[0]
+
 		$scope.change = ->
 			if $scope.name.length >= 3
 				search()

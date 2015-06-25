@@ -43,16 +43,22 @@ GET     /facebook/search               controllers.Facebook.search(pageName: Str
 
 # Feeds API
 GET     /feeds                         controllers.Feeds.list
-GET     /feeds/data                    controllers.Feeds.paginate(page: Int ?= 1, pageSize: Int ?= 10)
+GET     /feeds/timeline                controllers.Feeds.userTimeline(page: Int ?= 1, pageSize: Int ?= 10)
 POST    /feeds/create                  controllers.Feeds.create
 GET     /feeds/all                     controllers.Feeds.all
 GET     /feeds/count                   controllers.Feeds.count
-GET     /feeds/recent/:size            controllers.Feeds.recent(size: Int)
 GET     /feeds/search                  controllers.Feeds.search(q: String)
 POST    /feeds/prefix                  controllers.Feeds.prefix
-GET     /feeds/remove/:id              controllers.Feeds.remove(id: Int)
+GET     /feeds/popular                 controllers.Feeds.popular
+GET     /feeds/trending                controllers.Feeds.trending
 GET     /feeds/nearby                  controllers.Feeds.nearby(radius: Double ?= 50)
 GET     /feeds/:id                     controllers.Feeds.find(id: Int)
 PUT     /feeds/:id                     controllers.Feeds.update(id: Int)
+GET     /feeds/remove/:id              controllers.Feeds.remove(id: Int)
+GET     /feeds/recent/:size            controllers.Feeds.recent(size: Int)
 GET     /feeds/follow/:id              controllers.Feeds.follow(id: Int)
 GET     /feeds/unfollow/:id            controllers.Feeds.unfollow(id: Int)
+GET     /feeds/popular/add/:id         controllers.Feeds.addPopular(id: Int)
+GET     /feeds/popular/remove/:id      controllers.Feeds.removePopular(id: Int)
+GET     /feeds/trending/add/:id        controllers.Feeds.addTrending(id: Int)
+GET     /feeds/trending/remove/:id     controllers.Feeds.removeTrending(id: Int)

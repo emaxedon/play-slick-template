@@ -11,6 +11,7 @@ case class Feed(
 	version: Long = 1,
 	category: String,
 	name: String,
+	facebookPicture: Option[String] = None,
 	facebookCover: Option[String] = None,
 	facebookApi: Option[String],
 	twitterApi: Option[String],
@@ -40,6 +41,7 @@ case class FeedJson (
 	version: Long,
 	category: String,
 	name: String,
+	facebookPicture: Option[String],
 	facebookCover: Option[String],
 	facebookApi: Option[String],
 	twitterApi: Option[String],
@@ -50,11 +52,10 @@ case class FeedJson (
 	location: String,
 	latitude: Double,
 	longitude: Double,
-	relatedFeeds: Seq[Int],
-	feedData: Seq[DataJson]
+	relatedFeeds: Seq[Int]
 ) {
-	def this(f: Feed, relatedFeeds: Seq[Int], feedData: Seq[DataJson]) = this(id = f.id.get, version = f.version, category = f.category, name = f.name, facebookCover = f.facebookCover, f.facebookApi, f.twitterApi, f.instagramApi, f.youtubeApi,
-		dateCreated = f.dateCreated, dateUpdated = f.dateUpdated, location = f.location, latitude = f.latitude, longitude = f.longitude, relatedFeeds = relatedFeeds, feedData = feedData)
+	def this(f: Feed, relatedFeeds: Seq[Int]) = this(id = f.id.get, version = f.version, category = f.category, name = f.name, facebookPicture = f.facebookPicture, facebookCover = f.facebookCover, f.facebookApi, f.twitterApi, f.instagramApi, f.youtubeApi,
+		dateCreated = f.dateCreated, dateUpdated = f.dateUpdated, location = f.location, latitude = f.latitude, longitude = f.longitude, relatedFeeds = relatedFeeds)
 }
 
 /** Provides for JSON serializing/deserializing FeedJson instances */

@@ -12,6 +12,9 @@ class DataTable(tag: Tag) extends Table[Data](tag, "datas") {
 
 	def id = column[Int]("id", O.PrimaryKey, O.AutoInc)
 	def feedId = column[Int]("feed_id", O.NotNull)
+	def feedName = column[String]("feed_name", O.NotNull)
+	def feedPicture = column[Option[String]]("feed_picture")
+	def feedCover = column[Option[String]]("feed_cover")
 	def version = column[Long]("version", O.NotNull)
 	def network = column[String]("network", O.NotNull)
 	def media = column[String]("media", O.NotNull)
@@ -22,7 +25,7 @@ class DataTable(tag: Tag) extends Table[Data](tag, "datas") {
 
 	def feed = foreignKey("datas_feed_fk", feedId, TableQuery[FeedTable])(_.id, onDelete=ForeignKeyAction.Cascade)
 
-	def * = (id.?, feedId, version, network, media, mediaUrl, previewUrl, text, date) <> (Data.tupled, Data.unapply)
+	def * = (id.?, feedId, feedName, feedPicture, feedCover, version, network, media, mediaUrl, previewUrl, text, date) <> (Data.tupled, Data.unapply)
 	
 	def idx = index("datas_date_idx", date)
 }
@@ -46,10 +49,13 @@ object DataService {
 		datas.sortBy(_.date.desc).filter(_.feedId inSetBind feedIds).drop((page - 1)*pageSize).take(pageSize).list
 	}
 
-	def create(feedId: Int, network: String, media: String, mediaUrl: String, previewUrl: String, text: String, date: Timestamp): Option[Data] = db.withSession { implicit session =>
+	def create(feedId: Int, feedName: String, feedPicture: Option[String], feedCover: Option[String], network: String, media: String, mediaUrl: String, previewUrl: String, text: String, date: Timestamp): Option[Data] = db.withSession { implicit session =>
 		val dataId = (datas returning datas.map(_.id)) +=
 			Data(
 				feedId = feedId,
+				feedName = feedName,
+				feedPicture = feedPicture,
+				feedCover = feedCover,
 				network = network,
 				media = media,
 				mediaUrl = mediaUrl,

@@ -21,6 +21,8 @@ object Authentication extends Controller with Secured {
 
 	val config = ConfigFactory.load
 
+	val mailchimpKey = config.getString("mailchimp.apiKey")
+
 	def login = Action(parse.json) { implicit request =>
 		request.body.validate[UserAuth].map { userAuth =>
 			UserService.authenticate(userAuth.email, userAuth.password) match {
@@ -48,6 +50,11 @@ object Authentication extends Controller with Secured {
 					UserService.create(details.email, details.password, "user", details.location, location) match {
 						case Some(user) =>
 							val userJson = new UserJson(user)
+
+							WS.url("https://us11.api.mailchimp.com/3.0/lists/c46ee56979/members")
+								.withAuth("emaxedon", mailchimpKey, WSAuthScheme.BASIC)
+								.post(toJson(Json.obj("email_address" -> user.email, "status" -> "subscribed")))
+
 							Ok(resultJson(1, "registered", toJson(userJson))).withSession("user_id" -> user.id.get.toString)
 						case None =>
 							Ok(resultJson(0, "Oops! Problem registering user.", JsNull))
