@@ -13,6 +13,7 @@ import helpers._
 
 object Feeds extends Controller with Secured {
 
+
 	private def feedJson(feed: Feed) = toJson(new FeedJson(feed, FeedService.getChildren(feed.id.get)))
 	private def feedsJson(feeds: Seq[Feed]) = Json.obj("feeds" -> feeds.map(feedJson _))
 

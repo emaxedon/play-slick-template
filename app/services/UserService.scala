@@ -133,7 +133,7 @@ object UserService {
 			case None => None
 		}
 	}
-
+	
 	def following(userId: Int): Seq[Int] = db.withSession { implicit session => 
 		userFeeds.filter(_.userId === userId).map(_.feedId).list
 	}
