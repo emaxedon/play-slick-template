@@ -44,7 +44,10 @@ object DataService {
 		datas.filter(_.feedId === feedId).sortBy(_.date.desc).list
 	}
 
-	// page is 1 based (i.e. first page is page #1)
+	def listPage(feedId: Int, page: Int, pageSize: Int): Seq[Data] = db.withSession { implicit session =>
+		datas.sortBy(_.date.desc).filter(_.feedId === feedId).drop((page - 1)*pageSize).take(pageSize).list
+	}
+
 	def listPage(feedIds: Seq[Int], page: Int, pageSize: Int): Seq[Data] = db.withSession { implicit session =>
 		datas.sortBy(_.date.desc).filter(_.feedId inSetBind feedIds).drop((page - 1)*pageSize).take(pageSize).list
 	}

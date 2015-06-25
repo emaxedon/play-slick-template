@@ -16,8 +16,12 @@ object Feeds extends Controller with Secured {
 	private def feedJson(feed: Feed) = toJson(new FeedJson(feed, FeedService.getChildren(feed.id.get)))
 	private def feedsJson(feeds: Seq[Feed]) = Json.obj("feeds" -> feeds.map(feedJson _))
 
-	private def timelineJson(feeds: Seq[Feed], page: Int, pageSize: Int) = {
+	private def userTimelineJson(feeds: Seq[Feed], page: Int, pageSize: Int) = {
 		Json.obj("timeline" -> DataService.listPage(feeds.map(_.id.get), page, pageSize).map(new DataJson(_)))
+	}
+
+	private def timelineJson(feedId: Int, page: Int, pageSize: Int) = {
+		Json.obj("timeline" -> DataService.listPage(feedId, page, pageSize).map(new DataJson(_)))
 	}
 
 	def create = IsAdministrator(parse.json) { implicit user => implicit request =>
@@ -80,7 +84,11 @@ object Feeds extends Controller with Secured {
 	def userTimeline(page: Int, pageSize: Int) = IsAuthenticated(parse.anyContent) { implicit user => implicit request =>
 		val feeds = FeedService.find(UserService.following(user.id.get))
 
-		Ok(resultJson(1, "user feeds timeline", timelineJson(feeds, page, pageSize)))
+		Ok(resultJson(1, "user feeds timeline", userTimelineJson(feeds, page, pageSize)))
+	}
+
+	def timeline(id: Int, page: Int, pageSize: Int) = IsAuthenticated(parse.anyContent) { implicit user => implicit request =>
+		Ok(resultJson(1, "feed timeline", timelineJson(id, page, pageSize)))
 	}
 
 	def find(feedId: Int) = IsAuthenticated(parse.anyContent) { implicit user => implicit request =>

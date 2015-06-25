@@ -53,6 +53,7 @@ GET     /feeds/popular                 controllers.Feeds.popular
 GET     /feeds/trending                controllers.Feeds.trending
 GET     /feeds/nearby                  controllers.Feeds.nearby(radius: Double ?= 50)
 GET     /feeds/:id                     controllers.Feeds.find(id: Int)
+GET     /feeds/:id/timeline            controllers.Feeds.timeline(id: Int, page: Int ?= 1, pageSize: Int ?= 10)
 PUT     /feeds/:id                     controllers.Feeds.update(id: Int)
 GET     /feeds/remove/:id              controllers.Feeds.remove(id: Int)
 GET     /feeds/recent/:size            controllers.Feeds.recent(size: Int)
