@@ -7,11 +7,13 @@ define [ 'appModule' ], (app) ->
 		
 		search = ->
 			if $scope.name.length > 0
-				$http.post('/feeds/prefix', {search: $scope.name})
-					.success (data, status, headers, config) ->
-						if data.result == 1
-							$scope.matches = data.data.feeds.length
-							$scope.feeds = data.data.feeds
+				$http.get '/feeds/search',
+					params:
+						q: $scope.name
+				.success (data, status, headers, config) ->
+					if data.result == 1
+						$scope.matches = data.data.feeds.length
+						$scope.feeds = data.data.feeds
 			else
 				$scope.matches = 0
 				$scope.feeds = []

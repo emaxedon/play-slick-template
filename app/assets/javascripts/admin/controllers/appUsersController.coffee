@@ -7,11 +7,13 @@ define [ 'appModule' ], (app) ->
 		
 		search = ->
 			if $scope.email.length > 0
-				$http.post('/auth/prefix', {search: $scope.email})
-					.success (data, status, headers, config) ->
-						if data.result == 1
-							$scope.matches = data.data.users.length
-							$scope.users = data.data.users
+				$http.get '/auth/search',
+					params:
+						q: $scope.email
+				.success (data, status, headers, config) ->
+					if data.result == 1
+						$scope.matches = data.data.users.length
+						$scope.users = data.data.users
 			else
 				$scope.matches = 0
 				$scope.users = []

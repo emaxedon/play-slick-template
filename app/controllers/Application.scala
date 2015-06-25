@@ -17,4 +17,8 @@ object Application extends Controller with Secured {
   	Ok(views.html.reset("Reset password"))
   }
 
+  def documentation = Action {
+  	Ok(views.html.doc.index("API Documentation"))
+  }
+
 }

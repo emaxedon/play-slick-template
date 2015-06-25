@@ -13,7 +13,6 @@ import helpers._
 
 object Feeds extends Controller with Secured {
 
-
 	private def feedJson(feed: Feed) = toJson(new FeedJson(feed, FeedService.getChildren(feed.id.get)))
 	private def feedsJson(feeds: Seq[Feed]) = Json.obj("feeds" -> feeds.map(feedJson _))
 
@@ -118,12 +117,6 @@ object Feeds extends Controller with Secured {
 
 	def search(q: String) = IsAuthenticated(parse.anyContent) { implicit user => implicit request =>
 		Ok(resultJson(1, "feeds", feedsJson(FeedService.prefix(q))))
-	}
-
-	def prefix = IsAuthenticated(parse.json) { implicit user => implicit request =>
-		(request.body \ "search").asOpt[String].map { search =>
-			Ok(resultJson(1, "feeds", feedsJson(FeedService.prefix(search))))
-		}.getOrElse(Ok(resultJson(0, "Oops! Invalid json.", JsNull)))
 	}
 
 	def remove(id: Int) = IsAdministrator(parse.anyContent) { implicit user => implicit request =>

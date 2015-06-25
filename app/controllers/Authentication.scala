@@ -60,7 +60,7 @@ object Authentication extends Controller with Secured {
 							Ok(resultJson(0, "Oops! Problem registering user.", JsNull))
 						}
 				case None =>
-					Ok(resultJson(0, "Oops! Unrecognized postal code.", JsNull))
+					Ok(resultJson(0, "Oops! Unrecognized location.", JsNull))
 			}
 		}.getOrElse(Ok(resultJson(0, "Oops! Invalid json.", JsNull)))
 	}
@@ -99,10 +99,8 @@ object Authentication extends Controller with Secured {
 		Ok(resultJson(1, "Success! You have retrieved users", Json.obj("users" -> UserService.recent(size).map(user => new UserJson(user)))))
 	}
 
-	def prefix = IsAdministrator(parse.json) { implicit user => implicit request =>
-		(request.body \ "search").asOpt[String].map { search =>
-			Ok(resultJson(1, "Success! You have retrieved users", Json.obj("users" -> UserService.prefix(search).map(user => new UserJson(user)))))
-		}.getOrElse(Ok(resultJson(0, "Oops! Invalid json.", JsNull)))
+	def search(q: String) = IsAdministrator(parse.anyContent) { implicit user => implicit request =>
+		Ok(resultJson(1, "Success! You have retrieved users", Json.obj("users" -> UserService.prefix(q).map(user => new UserJson(user)))))
 	}
 
 	def prefixCount = IsAdministrator(parse.json) { implicit user => implicit request =>

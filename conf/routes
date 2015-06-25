@@ -12,7 +12,9 @@ GET     /webjars/*file                 controllers.WebJarAssets.at(file)
 
 GET     /admin                         controllers.Application.admin
 
-GET     /reset                         controllers.Application.reset				
+GET     /reset                         controllers.Application.reset
+
+GET     /api/documentation             controllers.Application.documentation			
 
 # Auth API
 POST    /auth/login                    controllers.Authentication.login
@@ -26,7 +28,7 @@ GET     /auth/user                     controllers.Authentication.user
 GET     /auth/users                    controllers.Authentication.users
 GET     /auth/count                    controllers.Authentication.count
 GET     /auth/recent/:size             controllers.Authentication.recent(size: Int)
-POST    /auth/prefix                   controllers.Authentication.prefix
+GET     /auth/search                   controllers.Authentication.search(q: String)
 POST    /auth/prefix/count             controllers.Authentication.prefixCount
 POST    /auth/forgotPassword           controllers.Authentication.forgotPassword
 GET     /auth/remove/:id               controllers.Authentication.remove(id: Int)
@@ -48,7 +50,6 @@ POST    /feeds/create                  controllers.Feeds.create
 GET     /feeds/all                     controllers.Feeds.all
 GET     /feeds/count                   controllers.Feeds.count
 GET     /feeds/search                  controllers.Feeds.search(q: String)
-POST    /feeds/prefix                  controllers.Feeds.prefix
 GET     /feeds/popular                 controllers.Feeds.popular
 GET     /feeds/trending                controllers.Feeds.trending
 GET     /feeds/nearby                  controllers.Feeds.nearby(radius: Double ?= 50)

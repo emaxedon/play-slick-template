@@ -1,0 +1,1060 @@
+@(title: String)
+
+@main(title) {
+
+  <div class="container">
+  <div class="row">
+    <!-- SIDEBAR -->
+    <div class="col-xs-4 sidebar">
+    <div>
+      <h1>API Doc <span class="label label-default">v1</span></h1>
+      <hr>
+  
+      <h4>Login</h4>
+
+      <ul>
+        <li><span class="label label-success">POST</span> <a href="#post-login">/auth/login</a></li>
+      </ul>
+
+      <h4>Logout</h4>
+
+      <ul>
+        <li><span class="label label-primary">GET</span> <a href="#get-logout">/auth/logout</a></li>
+      </ul>
+
+      <h4>Forgot Password</h4>
+
+      <ul>
+        <li><span class="label label-success">POST</span> <a href="#post-forgotpassword">/auth/forgotPassword</a></li>
+      </ul>
+
+      <h4>Registration</h4>
+
+      <ul>
+        <li><span class="label label-success">POST</span> <a href="#post-registration">/auth/register</a></li>
+      </ul>
+
+      <h4>User</h4>
+
+      <ul>
+        <li><span class="label label-primary">GET</span> <a href="#get-user">/auth/user</a></li>
+        <li><span class="label label-info">PUT</span> <a href="#put-user">/auth/user/{id}</a></li>
+        <li><span class="label label-primary">GET</span> <a href="#post-userdelete">/auth/remove/{id}</a></li>
+        <li><span class="label label-info">PUT</span> <a href="#post-userchangepassword">/auth/password</a></li>
+        <li><span class="label label-primary">GET</span> <a href="#get-usersearch">/auth/search?q={query string}</a></li>
+      </ul>
+
+      <h4>Feeds</h4>
+
+      <ul>
+        <li><span class="label label-primary">GET</span> <a href="#get-feeds">/feeds</a></li>
+        <li><span class="label label-success">POST</span> <a href="#post-feedscreate">/feeds/create</a></li>
+        <li><span class="label label-primary">GET</span> <a href="#get-feedsid">/feeds/{id}</a></li>
+        <li><span class="label label-primary">GET</span> <a href="#get-feedsidtimeline">/feeds/{id}/timeline?page={page number}&amp;pageSize={items per page}</a></li>
+        <li><span class="label label-primary">GET</span> <a href="#get-feedssearch">/feeds/search?q={query string}</a></li>
+        <li><span class="label label-primary">GET</span> <a href="#get-feedspopular">/feeds/popular</a></li>
+        <li><span class="label label-primary">GET</span> <a href="#get-feedspopularadd">/feeds/popular/add/{id}</a></li>
+        <li><span class="label label-primary">GET</span> <a href="#get-feedspopularremove">/feeds/popular/remove/{id}</a></li>
+        <li><span class="label label-primary">GET</span> <a href="#get-feedstrending">/feeds/trending</a></li>
+        <li><span class="label label-primary">GET</span> <a href="#get-feedstrendingadd">/feeds/trending/add/{id}</a></li>
+        <li><span class="label label-primary">GET</span> <a href="#get-feedstrendingremove">/feeds/trending/remove/{id}</a></li>
+        <li><span class="label label-primary">GET</span> <a href="#get-feedsnearby">/feeds/nearby?radius={distance in kilometers}</a></li>
+        <li><span class="label label-primary">GET</span> <a href="#get-feedsrecent">/feeds/recent/{count}</a></li>
+        <li><span class="label label-primary">GET</span> <a href="#get-feedstimeline">/feeds/timeline?page={page number}&amp;pageSize={items per page}</a></li>
+        <li><span class="label label-primary">GET</span> <a href="#get-feedsremove">/feeds/remove/{id}</a></li>
+        <li><span class="label label-primary">GET</span> <a href="#get-feedsfollow">/feeds/follow/{id}</a></li>
+        <li><span class="label label-primary">GET</span> <a href="#get-feedsunfollow">/feeds/unfollow/{id}</a></li>
+      </ul>
+
+    </div>
+    </div>
+    <!-- end SIDEBAR -->
+
+    <!-- CONTENT -->
+    <div class="col-xs-8 col-xs-offset-4 content">
+      <!-- section -->
+      <section id="post-login">
+        <h4><span class="label label-success">POST</span> /auth/login</h4>
+
+        <p><strong>Payload Examples</strong></p>
+        <div class="highlight">
+<pre>
+{
+  username: "test@@email.com",
+  password: "1111111"
+}
+</pre>
+        </div>
+
+        <p><strong>Results</strong></p>
+
+        <p><span class="label label-success">SUCCESS</span> <small>Returns Token</small></p>
+        <div class="highlight">
+<pre>
+{
+  result: 1,
+  message: "Success! You are now logged in.",
+  data: {
+    "id": 1,
+    "version": 1,
+    "role": "user",
+    "email": "test@@email.com",
+    "dateCreated": {
+      "time": 1435227882016
+    },
+    "dateUpdated": {
+      "time": 1435227882016
+    },
+    "location": "C1G-8B6",
+    "latitude": 45.4408,
+    "longitude": -89.0803
+  }
+}
+</pre>
+        </div>
+    
+        <p><span class="label label-danger">ERROR</span></p>
+        <div class="highlight">
+<pre>
+{
+  result: 0,
+  message: "Oops! User email or password incorrect.",
+  data: null
+}
+</pre>
+        </div>
+      </section><!-- /section -->
+
+      <!-- section -->
+      <section id="get-logout">
+        <h4><span class="label label-primary">GET</span> /auth/logout</h4>
+        
+        <p><strong>Results</strong></p>
+
+        <p><span class="label label-success">SUCCESS</span></p>
+        <div class="highlight">
+<pre>
+{
+  result: 1,
+  message: "Success! You have been logged out.",
+  data: null,
+}
+</pre>
+      </div>
+      </section><!-- /section -->
+
+
+      <!-- section -->
+      <section id="post-forgotpassword">
+        <h4><span class="label label-success">POST</span> /auth/forgotPassword</h4>
+        
+        <p><strong>Payload Examples</strong></p>
+        <div class="highlight">
+<pre>
+{
+  email: "test@@email.com"
+}
+</pre>
+        </div>
+
+        <p><strong>Results</strong></p>
+
+        <p><span class="label label-success">SUCCESS</span></p>
+        <div class="highlight">
+<pre>
+{
+  result: 1,
+  message: "Success! Password has been reset and password token has been sent to your email.",
+  data: null
+}
+</pre>
+        </div>
+    
+        <p><span class="label label-danger">ERROR</span></p>
+        <div class="highlight">
+<pre>
+{
+  result: 0,
+  message: "Oops! Failed to reset password.",
+  data: null
+}
+</pre>
+        </div>
+      </section><!-- /section -->
+
+      <!-- section -->
+      <section id="post-registration">
+        <h4><span class="label label-success">POST</span> /auth/register</h4>
+        
+        <p><strong>Payload Examples</strong></p>
+        <div class="highlight">
+<pre>
+{
+  email: "test@@email.com",
+  password: "11111111",
+  location: "Montreal, QC, CA"
+}
+</pre>
+        </div>
+
+        <p><strong>Results</strong></p>
+
+        <p><span class="label label-success">SUCCESS</span></p>
+        <div class="highlight">
+<pre>
+{
+  "result": 1,
+  "message": "registered",
+  "data": {
+    "id": 12,
+    "version": 1,
+    "role": "user",
+    "email": "test@@email.com",
+    "dateCreated": {
+      "time": 1435228703149
+    },
+    "dateUpdated": {
+      "time": 1435228703149
+    },
+    "location": "Montreal, QC, CA",
+    "latitude": 45.5016889,
+    "longitude": -73.567256
+  }
+}
+</pre>
+        </div>
+    
+        <p><span class="label label-danger">ERROR</span></p>
+        <div class="highlight">
+<pre>
+{
+  result: 0,
+  message: "Oops! Unrecognized location.",
+  data: null
+}
+</pre>
+        </div>
+
+        <p><span class="label label-danger">ERROR</span></p>
+        <div class="highlight">
+<pre>
+{
+  result: 0,
+  message: "Oops! Problem registering user.",
+  data: null
+}
+</pre>
+        </div>
+
+        <p><span class="label label-danger">ERROR</span></p>
+        <div class="highlight">
+<pre>
+{
+  result: 0,
+  message: "Oops! Invalid json.",
+  data: null
+}
+</pre>
+        </div>
+      </section><!-- /section -->
+
+      <!-- section -->
+      <section id="get-user">
+        <h4><span class="label label-primary">GET</span> /auth/user</h4>
+      
+        <p><strong>Results</strong></p>
+
+        <p><span class="label label-success">SUCCESS</span></p>
+        <div class="highlight">
+<pre>
+{
+  "result": 1,
+  "message": "Success! You have retrieved user data.",
+  "data": {
+    "id": 12,
+    "version": 1,
+    "role": "user",
+    "email": "emaxedon@@gmail.com",
+    "dateCreated": {
+      "time": 1435228703149
+    },
+    "dateUpdated": {
+      "time": 1435228703149
+    },
+    "location": "Montreal, QC, CA",
+    "latitude": 45.5016889,
+    "longitude": -73.567256
+  }
+}
+</pre>
+        </div>
+
+        <p><span class="label label-danger">ERROR</span></p>
+        <div class="highlight">
+<pre>
+{
+  "result": 0,
+  "message": "unauthorized attempt",
+  "data": null
+}
+</pre>
+        </div>
+      </section><!-- /section -->
+
+      <!-- section -->
+      <section id="put-user">
+        <h4><span class="label label-info">PUT</span> /auth/user/{id}</h4>
+        
+        <p><strong>Payload Examples</strong></p>
+        <div class="highlight">
+<pre>
+{
+  email: "newemail@@something.com",
+  password: "newpassword",
+  location: "Montreal, QC, CA"
+}
+</pre>
+        </div>
+
+        <p><strong>Results</strong></p>
+        <p><span class="label label-success">SUCCESS</span></p>
+        <div class="highlight">
+<pre>
+{
+  result: 1,
+  message: "user updated",
+  data: null
+}
+</pre>
+        </div>
+
+        <p><span class="label label-danger">ERROR</span></p>
+        <div class="highlight">
+<pre>
+{
+  result: 0,
+  data: null,
+  message: "Oops! Problem updating user."
+}
+</pre>
+        </div>
+      </section><!-- /section -->
+
+      <!-- section -->
+      <section id="post-userdelete">
+        <h4><span class="label label-success">GET</span> /auth/remove/{id}</h4>
+
+        <p><strong>Results</strong></p>
+        <p><span class="label label-success">SUCCESS</span></p>
+        <div class="highlight">
+<pre>
+{
+  result: 1,
+  message: "user removed",
+  data: null
+}
+</pre>
+        </div>
+        
+        <p><span class="label label-danger">ERROR</span></p>
+        <div class="highlight">
+<pre>
+{
+  result: 0,
+  message: "Oops! Problem removing user.",
+  data: null
+}
+</pre>
+      </div>
+      </section>
+      <!-- end section -->
+
+      <!-- section -->
+      <section id="post-userchangepassword">
+      <h4><span class="label label-success">PUT</span> /auth/password</h4>
+
+      <p><strong>Payload Examples</strong></p>
+      <div class="highlight">
+<pre>
+{
+  password: "12345678"
+}
+</pre>
+        </div>
+
+        <p><strong>Results</strong></p>
+        <p><span class="label label-success">SUCCESS</span></p>
+        <div class="highlight">
+<pre>
+{
+  "result": 1,
+  "message": "Success! Password has been updated.",
+  "data": {
+    "id": 1,
+    "version": 2,
+    "role": "admin",
+    "email": "admin@@example.com",
+    "dateCreated": {
+      "time": 1435227882016
+    },
+    "dateUpdated": {
+      "time": 1435229542511
+    },
+    "location": "C1G-8B6",
+    "latitude": 45.4408,
+    "longitude": -89.0803
+  }
+}
+</pre>
+        </div>
+        
+        <p><span class="label label-danger">ERROR</span></p>
+        <div class="highlight">
+<pre>
+{
+  result: 0,
+  message: "Oops! Failed to update password.",
+  data: null
+}
+</pre>
+        </div>
+      </section><!-- /section -->
+
+      <!-- section -->
+      <section id="get-usersearch">
+        <h4><span class="label label-success">GET</span> /auth/search?q={query string}</h4>
+
+        <p><strong>Results</strong></p>
+        <p><span class="label label-success">SUCCESS</span></p>
+        <div class="highlight">
+<pre>
+{
+  "result": 1,
+  "message": "Success! You have retrieved users",
+  "data": {
+    "users": [
+      {
+        "id": 1,
+        "version": 2,
+        "role": "admin",
+        "email": "admin@@example.com",
+        "dateCreated": {
+          "time": 1435227882016
+        },
+        "dateUpdated": {
+          "time": 1435229542511
+        },
+        "location": "C1G-8B6",
+        "latitude": 45.4408,
+        "longitude": -89.0803
+      }
+    ]
+  }
+}
+</pre>
+        </div>
+      </section><!-- /section -->
+
+      <!-- section -->
+      <section id="get-feeds">
+        <h4><span class="label label-success">GET</span> /feeds</h4>
+
+        <p><strong>Results</strong></p>
+        <p><span class="label label-success">SUCCESS</span></p>
+        <div class="highlight">
+<pre>
+{
+  "result": 1,
+  "message": "user feeds",
+  "data": {
+    "feeds": [
+      {
+        "id": 1,
+        "version": 1,
+        "category": "player",
+        "name": "Bod Gruver",
+        "dateCreated": {
+          "time": 1435227883902
+        },
+        "dateUpdated": {
+          "time": 1435227883902
+        },
+        "location": "V7Y-6Q2",
+        "latitude": 38.0131,
+        "longitude": -78.4958,
+        "relatedFeeds": []
+      },
+      {
+        "id": 2,
+        "version": 1,
+        "category": "team",
+        "name": "Trish's Team",
+        "dateCreated": {
+          "time": 1435227883947
+        },
+        "dateUpdated": {
+          "time": 1435227883947
+        },
+        "location": "98043-0429",
+        "latitude": 36.9319,
+        "longitude": -92.5764,
+        "relatedFeeds": []
+      }
+    ]
+  }
+}
+</pre>
+        </div>
+      </section><!-- /section -->
+
+      <!-- section -->
+      <section id="post-feedscreate"><h4><span class="label label-success">POST</span> /feeds/create</h4>
+
+        <p><strong>Payload Examples</strong></p>
+        <div class="highlight">
+<pre>
+{
+  category: "team",
+  name: "Impact Montreal",
+  facebookApi: "Impact de Montreal",
+  twitterApi: "impactmontreal",
+  instagramApi: "impactmontreal",
+  youtubeApi: "ImpactMontrealFC",
+  location: "Montreal, QC, CA"
+}
+</pre>
+        </div>
+
+        <p><strong>Results</strong></p>
+
+        <p><span class="label label-success">SUCCESS</span></p>
+        <div class="highlight">
+<pre>
+{
+  "result": 1,
+  "message": "created feed",
+  "data": {
+    "id": 21,
+    "version": 1,
+    "category": "team",
+    "name": "Impact Montreal",
+    "facebookPicture": "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xap1/v/t1.0-1/p50x50/1382258_10151933657605979_1477267295_n.jpg?oh=f5005db2c4a4f4e60c0bea55c504af27&oe=55EEEA39&__gda__=1445795995_de9a7d02bf8bf986f7f5ca0c3faedb29",
+    "facebookCover": "https://scontent.xx.fbcdn.net/hphotos-xta1/v/t1.0-9/s720x720/10420052_10153281216085979_6555635475723281723_n.jpg?oh=b4c5a05918691cbc60e1021580a5f425&oe=5620816E",
+    "facebookApi": "Impact de Montreal",
+    "twitterApi": "impactmontreal",
+    "instagramApi": "impactmontreal",
+    "youtubeApi": "ImpactMontrealFC",
+    "dateCreated": {
+      "time": 1435232043905
+    },
+    "dateUpdated": {
+      "time": 1435232043905
+    },
+    "location": "Montreal, QC, CA",
+    "latitude": 45.5016889,
+    "longitude": -73.567256,
+    "relatedFeeds": []
+  }
+}
+</pre>
+        </div>
+    
+        <p><span class="label label-danger">ERROR</span></p>
+        <div class="highlight">
+<pre>
+{
+  result: 0,
+  message: "Oops! Problem creating feed.",
+  data: null
+}
+</pre>
+        </div>
+      </section><!-- /section -->
+
+
+      <!-- section -->
+      <section id="get-feedsid">
+        <h4><span class="label label-success">GET</span> /feeds/{id}</h4>
+
+        <p><strong>Results</strong></p>
+        <p><span class="label label-success">SUCCESS</span></p>
+        <div class="highlight">
+<pre>
+{
+  "result": 1,
+  "message": "feed by id",
+  "data": {
+    "id": 1,
+    "version": 1,
+    "category": "player",
+    "name": "Bod Gruver",
+    "dateCreated": {
+      "time": 1435227883902
+    },
+    "dateUpdated": {
+      "time": 1435227883902
+    },
+    "location": "V7Y-6Q2",
+    "latitude": 38.0131,
+    "longitude": -78.4958,
+    "relatedFeeds": []
+  }
+}
+</pre>
+        </div>
+        
+        <p><span class="label label-danger">ERROR</span></p>
+        <div class="highlight">
+<pre>
+{
+  result: 0,
+  message: "Oops! Non-existent feed.",
+  data: null
+}
+</pre>
+      </div>
+      </section><!-- /section -->
+
+      <!-- section -->
+      <section id="get-feedsidtimeline">
+        <h4><span class="label label-success">GET</span> /feeds/{id}/timeline?page={page number}&amp;pageSize={items per page}</h4>
+
+        <p><strong>Results</strong></p>
+        <p><span class="label label-success">SUCCESS</span></p>
+        <div class="highlight">
+<pre>
+{
+  "result": 1,
+  "message": "feed timeline",
+  "data": {
+    "timeline": [
+      {
+        "id": 1,
+        "feedId": 21,
+        "feedName": "Impact Montreal",
+        "feedPicture": "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xap1/v/t1.0-1/p50x50/1382258_10151933657605979_1477267295_n.jpg?oh=f5005db2c4a4f4e60c0bea55c504af27&oe=55EEEA39&__gda__=1445795995_de9a7d02bf8bf986f7f5ca0c3faedb29",
+        "feedCover": "https://scontent.xx.fbcdn.net/hphotos-xta1/v/t1.0-9/s720x720/10420052_10153281216085979_6555635475723281723_n.jpg?oh=b4c5a05918691cbc60e1021580a5f425&oe=5620816E",
+        "network": "twitter",
+        "media": "tweet",
+        "mediaUrl": "",
+        "previewUrl": "impactmontreal.com",
+        "text": "RT @@wandrillelef: Merci aux supporters venus a Toronto !!! Toujours plaisant de vous voir ! #IMFC @@impactsoccer @@ultrasmontreal",
+        "date": {
+          "time": 1435204484000
+        }
+      },
+      {
+        "id": 2,
+        "feedId": 21,
+        "feedName": "Impact Montreal",
+        "feedPicture": "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xap1/v/t1.0-1/p50x50/1382258_10151933657605979_1477267295_n.jpg?oh=f5005db2c4a4f4e60c0bea55c504af27&oe=55EEEA39&__gda__=1445795995_de9a7d02bf8bf986f7f5ca0c3faedb29",
+        "feedCover": "https://scontent.xx.fbcdn.net/hphotos-xta1/v/t1.0-9/s720x720/10420052_10153281216085979_6555635475723281723_n.jpg?oh=b4c5a05918691cbc60e1021580a5f425&oe=5620816E",
+        "network": "twitter",
+        "media": "photo",
+        "mediaUrl": "http://pbs.twimg.com/media/CIUEn8cWsAAoZDx.jpg",
+        "previewUrl": "bit.ly/1J6NvIM",
+        "text": "MATCH REPORT\\\nImpact falls 3-1 to Toronto FC on the road &gt;&gt; http://t.co/hEDflEBYxb\\\n#IMFC #TORvMTL #RivalryWeek http://t.co/VbCSdUKppA",
+        "date": {
+          "time": 1435200619000
+        }
+      }
+    ]
+  }
+}
+</pre>
+        </div>
+      </section><!-- /section -->
+
+      <!-- section -->
+      <section id="get-feedssearch">
+        <h4><span class="label label-success">GET</span> /feeds/search?q={query string}</h4>
+
+        <p><strong>Results</strong></p>
+        <p><span class="label label-success">SUCCESS</span></p>
+        <div class="highlight">
+<pre>
+{
+  "result": 1,
+  "message": "feeds",
+  "data": {
+    "feeds": [
+      {
+        "id": 1,
+        "version": 1,
+        "category": "player",
+        "name": "Bod Gruver",
+        "dateCreated": {
+          "time": 1435227883902
+        },
+        "dateUpdated": {
+          "time": 1435227883902
+        },
+        "location": "V7Y-6Q2",
+        "latitude": 38.0131,
+        "longitude": -78.4958,
+        "relatedFeeds": []
+      }
+    ]
+  }
+}
+</pre>
+        </div>
+      </section><!-- /section -->
+
+      <!-- section -->
+      <section id="get-feedspopular">
+        <h4><span class="label label-success">GET</span> /feeds/popular</h4>
+
+        <p><strong>Results</strong></p>
+        <p><span class="label label-success">SUCCESS</span></p>
+        <div class="highlight">
+<pre>
+{
+  "result": 1,
+  "message": "popular feeds",
+  "data": {
+    "feeds": [
+      {
+        "id": 21,
+        "version": 1,
+        "category": "team",
+        "name": "Impact Montreal",
+        "facebookPicture": "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xap1/v/t1.0-1/p50x50/1382258_10151933657605979_1477267295_n.jpg?oh=f5005db2c4a4f4e60c0bea55c504af27&oe=55EEEA39&__gda__=1445795995_de9a7d02bf8bf986f7f5ca0c3faedb29",
+        "facebookCover": "https://scontent.xx.fbcdn.net/hphotos-xta1/v/t1.0-9/s720x720/10420052_10153281216085979_6555635475723281723_n.jpg?oh=b4c5a05918691cbc60e1021580a5f425&oe=5620816E",
+        "facebookApi": "Impact de Montreal",
+        "twitterApi": "impactmontreal",
+        "instagramApi": "impactmontreal",
+        "youtubeApi": "ImpactMontrealFC",
+        "dateCreated": {
+          "time": 1435232043905
+        },
+        "dateUpdated": {
+          "time": 1435232043905
+        },
+        "location": "Montreal, QC, CA",
+        "latitude": 45.5016889,
+        "longitude": -73.567256,
+        "relatedFeeds": []
+      }
+    ]
+  }
+}
+</pre>
+        </div>
+      </section><!-- /section -->
+
+      <!-- section -->
+      <section id="get-feedspopularadd">
+        <h4><span class="label label-success">GET</span> /feeds/popular/add/{id}</h4>
+
+        <p><strong>Results</strong></p>
+        <p><span class="label label-success">SUCCESS</span></p>
+        <div class="highlight">
+<pre>
+{
+  "result": 1,
+  "message": "feed has been made popular",
+  "data": null
+}
+</pre>
+        </div>
+      </section><!-- /section -->
+
+      <!-- section -->
+      <section id="get-feedspopularremove">
+        <h4><span class="label label-success">GET</span> /feeds/popular/remove/{id}</h4>
+
+        <p><strong>Results</strong></p>
+        <p><span class="label label-success">SUCCESS</span></p>
+        <div class="highlight">
+<pre>
+{
+  "result": 1,
+  "message": "feed has been removed from popular feeds",
+  "data": null
+}
+</pre>
+        </div>
+      </section><!-- /section -->
+
+      <!-- section -->
+      <section id="get-feedstrending">
+        <h4><span class="label label-success">GET</span> /feeds/trending</h4>
+
+        <p><strong>Results</strong></p>
+        <p><span class="label label-success">SUCCESS</span></p>
+        <div class="highlight">
+<pre>
+{
+  "result": 1,
+  "message": "trending feeds",
+  "data": {
+    "feeds": [
+      {
+        "id": 20,
+        "version": 1,
+        "category": "team",
+        "name": "Julinka's Team",
+        "dateCreated": {
+          "time": 1435227884401
+        },
+        "dateUpdated": {
+          "time": 1435227884401
+        },
+        "location": "39962-7067",
+        "latitude": 39.0389,
+        "longitude": -79.0458,
+        "relatedFeeds": []
+      }
+    ]
+  }
+}
+</pre>
+        </div>
+      </section><!-- /section -->
+
+      <!-- section -->
+      <section id="get-feedstrendingadd">
+        <h4><span class="label label-success">GET</span> /feeds/trending/add/{id}</h4>
+
+        <p><strong>Results</strong></p>
+        <p><span class="label label-success">SUCCESS</span></p>
+        <div class="highlight">
+<pre>
+{
+  "result": 1,
+  "message": "feed has been made trending",
+  "data": null
+}
+</pre>
+        </div>
+      </section><!-- /section -->
+
+      <!-- section -->
+      <section id="get-feedstrendingremove">
+        <h4><span class="label label-success">GET</span> /feeds/trending/remove/{id}</h4>
+
+        <p><strong>Results</strong></p>
+        <p><span class="label label-success">SUCCESS</span></p>
+        <div class="highlight">
+<pre>
+{
+  "result": 1,
+  "message": "feed has been removed from trending feeds",
+  "data": null
+}
+</pre>
+        </div>
+      </section><!-- /section -->
+
+      <!-- section -->
+      <section id="get-feedsnearby">
+        <h4><span class="label label-success">GET</span> /feeds/nearby?radius={distance}</h4>
+
+        <p><strong>Results</strong></p>
+        <p><span class="label label-success">SUCCESS</span></p>
+        <div class="highlight">
+<pre>
+{
+  "result": 1,
+  "message": "nearby feeds",
+  "data": {
+    "feeds": [
+      {
+        "id": 21,
+        "version": 1,
+        "category": "team",
+        "name": "Impact Montreal",
+        "facebookPicture": "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xap1/v/t1.0-1/p50x50/1382258_10151933657605979_1477267295_n.jpg?oh=f5005db2c4a4f4e60c0bea55c504af27&oe=55EEEA39&__gda__=1445795995_de9a7d02bf8bf986f7f5ca0c3faedb29",
+        "facebookCover": "https://scontent.xx.fbcdn.net/hphotos-xta1/v/t1.0-9/s720x720/10420052_10153281216085979_6555635475723281723_n.jpg?oh=b4c5a05918691cbc60e1021580a5f425&oe=5620816E",
+        "facebookApi": "Impact de Montreal",
+        "twitterApi": "impactmontreal",
+        "instagramApi": "impactmontreal",
+        "youtubeApi": "ImpactMontrealFC",
+        "dateCreated": {
+          "time": 1435232043905
+        },
+        "dateUpdated": {
+          "time": 1435232043905
+        },
+        "location": "Montreal, QC, CA",
+        "latitude": 45.5016889,
+        "longitude": -73.567256,
+        "relatedFeeds": []
+      }
+    ]
+  }
+}
+</pre>
+        </div>
+      </section><!-- /section -->
+
+      <!-- section -->
+      <section id="get-feedsrecent">
+        <h4><span class="label label-success">GET</span> /feeds/recent/{count}</h4>
+
+        <p><strong>Results</strong></p>
+        <p><span class="label label-success">SUCCESS</span></p>
+        <div class="highlight">
+<pre>
+{
+  "result": 1,
+  "message": "recent feeds",
+  "data": {
+    "feeds": [
+      {
+        "id": 22,
+        "version": 1,
+        "category": "team",
+        "name": "Impact Montreal",
+        "facebookPicture": "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xap1/v/t1.0-1/p50x50/1382258_10151933657605979_1477267295_n.jpg?oh=f5005db2c4a4f4e60c0bea55c504af27&oe=55EEEA39&__gda__=1445795995_de9a7d02bf8bf986f7f5ca0c3faedb29",
+        "facebookCover": "https://scontent.xx.fbcdn.net/hphotos-xta1/v/t1.0-9/s720x720/10420052_10153281216085979_6555635475723281723_n.jpg?oh=b4c5a05918691cbc60e1021580a5f425&oe=5620816E",
+        "facebookApi": "Impact de Montreal",
+        "twitterApi": "impactmontreal",
+        "instagramApi": "impactmontreal",
+        "youtubeApi": "ImpactMontrealFC",
+        "dateCreated": {
+          "time": 1435232762174
+        },
+        "dateUpdated": {
+          "time": 1435232762174
+        },
+        "location": "Montreal, QC, CA",
+        "latitude": 45.5016889,
+        "longitude": -73.567256,
+        "relatedFeeds": []
+      },
+      {
+        "id": 23,
+        "version": 1,
+        "category": "team",
+        "name": "Montreal Habs",
+        "facebookPicture": "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-frc3/v/t1.0-1/p50x50/1230008_593224527386736_1969164447_n.jpg?oh=d9c398806a44755055d63bb16c2d2c34&oe=55EBF23A&__gda__=1445686082_b540ea7b2a99f0c5938480e192f7a571",
+        "facebookCover": "https://scontent.xx.fbcdn.net/hphotos-xat1/v/t1.0-9/p720x720/11146545_926680157374503_3482851601844003829_n.jpg?oh=c9e44da555e448e8806120e1a7275174&oe=55F01AAF",
+        "facebookApi": "Montreal Canadians",
+        "twitterApi": "montrealhabs",
+        "instagramApi": "montrealhabs",
+        "dateCreated": {
+          "time": 1435233003094
+        },
+        "dateUpdated": {
+          "time": 1435233003094
+        },
+        "location": "Montreal, QC, CA",
+        "latitude": 45.5016889,
+        "longitude": -73.567256,
+        "relatedFeeds": []
+      }
+    ]
+  }
+}
+</pre>
+        </div>
+      </section><!-- /section -->
+
+
+      <!-- section -->
+      <section id="get-feedstimeline">
+        <h4><span class="label label-success">GET</span> /feeds/timeline?page={page number}&amp;pageSize={items per page}</h4>
+
+        <p><strong>Results</strong></p>
+        <p><span class="label label-success">SUCCESS</span></p>
+        <div class="highlight">
+<pre>
+{
+  "result": 1,
+  "message": "user feeds timeline",
+  "data": {
+    "timeline": [
+      {
+        "id": 1,
+        "feedId": 21,
+        "feedName": "Impact Montreal",
+        "feedPicture": "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xap1/v/t1.0-1/p50x50/1382258_10151933657605979_1477267295_n.jpg?oh=f5005db2c4a4f4e60c0bea55c504af27&oe=55EEEA39&__gda__=1445795995_de9a7d02bf8bf986f7f5ca0c3faedb29",
+        "feedCover": "https://scontent.xx.fbcdn.net/hphotos-xta1/v/t1.0-9/s720x720/10420052_10153281216085979_6555635475723281723_n.jpg?oh=b4c5a05918691cbc60e1021580a5f425&oe=5620816E",
+        "network": "twitter",
+        "media": "tweet",
+        "mediaUrl": "",
+        "previewUrl": "impactmontreal.com",
+        "text": "RT @@wandrillelef: Merci aux supporters venus a Toronto !!! Toujours plaisant de vous voir ! #IMFC @@impactsoccer @@ultrasmontreal",
+        "date": {
+          "time": 1435204484000
+        }
+      },
+      {
+        "id": 2,
+        "feedId": 21,
+        "feedName": "Impact Montreal",
+        "feedPicture": "https://fbcdn-profile-a.akamaihd.net/hprofile-ak-xap1/v/t1.0-1/p50x50/1382258_10151933657605979_1477267295_n.jpg?oh=f5005db2c4a4f4e60c0bea55c504af27&oe=55EEEA39&__gda__=1445795995_de9a7d02bf8bf986f7f5ca0c3faedb29",
+        "feedCover": "https://scontent.xx.fbcdn.net/hphotos-xta1/v/t1.0-9/s720x720/10420052_10153281216085979_6555635475723281723_n.jpg?oh=b4c5a05918691cbc60e1021580a5f425&oe=5620816E",
+        "network": "twitter",
+        "media": "photo",
+        "mediaUrl": "http://pbs.twimg.com/media/CIUEn8cWsAAoZDx.jpg",
+        "previewUrl": "bit.ly/1J6NvIM",
+        "text": "MATCH REPORT\\\nImpact falls 3-1 to Toronto FC on the road &gt;&gt; http://t.co/hEDflEBYxb\\\n#IMFC #TORvMTL #RivalryWeek http://t.co/VbCSdUKppA",
+        "date": {
+          "time": 1435200619000
+        }
+      }
+    ]
+  }
+}
+</pre>
+        </div>
+      </section><!-- /section -->
+
+      <!-- section -->
+      <section id="get-feedsremove">
+        <h4><span class="label label-success">GET</span> /feeds/remove/{id}</h4>
+
+        <p><strong>Results</strong></p>
+        <p><span class="label label-success">SUCCESS</span></p>
+        <div class="highlight">
+<pre>
+{
+  "result": 1,
+  "message": "removed feed",
+  "data": null
+}
+</pre>
+        </div>
+      </section><!-- /section -->
+
+      <!-- section -->
+      <section id="get-feedsfollow">
+        <h4><span class="label label-success">GET</span> /feeds/follow/{id}</h4>
+
+        <p><strong>Results</strong></p>
+        <p><span class="label label-success">SUCCESS</span></p>
+        <div class="highlight">
+<pre>
+{
+  "result": 1,
+  "message": "successfully following feed",
+  "data": null
+}
+</pre>
+        </div>
+      </section><!-- /section -->
+
+      <!-- section -->
+      <section id="get-feedsunfollow">
+        <h4><span class="label label-success">GET</span> /feeds/unfollow/{id}</h4>
+
+        <p><strong>Results</strong></p>
+        <p><span class="label label-success">SUCCESS</span></p>
+        <div class="highlight">
+<pre>
+{
+  "result": 1,
+  "message": "successfully unfollowing feed",
+  "data": null
+}
+</pre>
+        </div>
+      </section><!-- /section -->
+
+      </div><!-- /CONTENT -->
+    </div>
+  </div>
+}
