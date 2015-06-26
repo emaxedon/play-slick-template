@@ -31,6 +31,7 @@ require.config
 		'appFeedsController': 'javascripts/admin/controllers/appFeedsController'
 		'appPopularController': 'javascripts/admin/controllers/appPopularController'
 		'appTrendingController': 'javascripts/admin/controllers/appTrendingController'
+		'appImportExportController': 'javascripts/admin/controllers/appImportExportController'
 		'appBoot': 'javascripts/admin/appBoot'
 
 require [

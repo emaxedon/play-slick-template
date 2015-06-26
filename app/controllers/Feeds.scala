@@ -10,6 +10,7 @@ import play.api.Logger
 import models._
 import services._
 import helpers._
+import java.io.File
 
 object Feeds extends Controller with Secured {
 
@@ -143,6 +144,21 @@ object Feeds extends Controller with Secured {
 		UserService.unfollow(user.id.get, feedId) match {
 			case true => Ok(resultJson(1, "successfully unfollowing feed", JsNull))
 			case false => Ok(resultJson(0, "failed to unfollow feed", JsNull))
+		}
+	}
+
+	def upload = IsAdministrator(parse.multipartFormData) { implicit user => implicit request =>
+		request.body.file("file").map { file =>
+			val filename = file.filename 
+			val contentType = file.contentType
+
+			Logger.debug(filename)
+			// TODO: parse file and create feeds
+			// file.ref.moveTo(new File("/tmp",filename))
+			Ok(resultJson(1, "successfully imported feeds", JsNull))
+		}.getOrElse {
+			Logger.debug("oops")
+			Ok(resultJson(0, "Oops! An error occured.", JsNull))
 		}
 	}
 	

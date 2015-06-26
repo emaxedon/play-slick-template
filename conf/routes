@@ -64,3 +64,4 @@ GET     /feeds/popular/add/:id         controllers.Feeds.addPopular(id: Int)
 GET     /feeds/popular/remove/:id      controllers.Feeds.removePopular(id: Int)
 GET     /feeds/trending/add/:id        controllers.Feeds.addTrending(id: Int)
 GET     /feeds/trending/remove/:id     controllers.Feeds.removeTrending(id: Int)
+POST    /feeds/upload                  controllers.Feeds.upload

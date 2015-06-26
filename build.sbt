@@ -15,6 +15,7 @@ libraryDependencies ++= Seq(
 	ws,
 	"com.typesafe.play" %% "play-slick" % "0.8.1",
 	"com.typesafe.play" %% "play-mailer" % "2.4.1",
+	"com.github.tototoshi" %% "scala-csv" % "1.2.1",
 	"org.postgresql" % "postgresql" % "9.4-1201-jdbc41",
 	"org.mindrot" % "jbcrypt" % "0.3m",
 	"org.webjars" %% "webjars-play" % "2.3.0",
