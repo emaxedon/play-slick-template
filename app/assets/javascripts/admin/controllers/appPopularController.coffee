@@ -12,6 +12,16 @@ define [ 'appModule' ], (app) ->
 					if data.result == 1
 						$scope.feeds = data.data.feeds
 
+		$scope.search = (val) ->
+			$http.get '/feeds/search',
+				params:
+					q: val
+			.then (response) ->
+				response.data.data.feeds.map( (item) -> item )
+
+		$scope.onSearchSelect = ($item, $model, $label) ->
+			$scope.feedId = $item.id
+
 		$scope.remove = (id) ->
 			$scope.error = false
 			$scope.message = false
@@ -23,6 +33,7 @@ define [ 'appModule' ], (app) ->
 						popular()
 		
 		$scope.add = ->
+			$scope.name = ""
 			$scope.error = false
 			$scope.message = false
 

@@ -44,6 +44,13 @@
 	<div class="row">
 		<div class="admin-center col-xs-8 col-xs-offset-2">
 			<h2 class="text-center">Popular Feeds</h2>
+
+			<div class="input-group">
+				<span class="input-group-addon">Find</span>
+				<input type="text" class="form-control" ng-model="name" typeahead="item.name for item in search($viewValue)" typeahead-on-select="onSearchSelect($item, $model, $label)" placeholder="Feed name" autofocus />
+				<span class="input-group-addon btn btn-success" ng-click="add()">Add</span>
+			</div>
+
 			<div class="table-wrapper">
 				<table class="table">
 					<tr>
