@@ -17,7 +17,8 @@ import util._
 import helpers._
 import java.net.URLEncoder
 import java.text.Normalizer
-
+import java.io.File
+import com.github.tototoshi.csv._
 
 class FeedTable(tag: Tag) extends Table[Feed](tag, "feeds") {
 
@@ -100,6 +101,34 @@ object FeedService {
 
 	def listTrending: Seq[Feed] = db.withSession { implicit session =>
 		find(feedTrendings.list.map(_._1))
+	}
+
+	def importCSV(file: File) = db.withSession { implicit session =>
+		val reader = CSVReader.open(file)
+		// ,#,League,Teams,City,Twitter,Facebook.com,Instagram,Pinterest,Youtube,Column1
+		reader.foreach( line =>
+			line(3) match {
+				case "" =>
+				case _ =>
+					geocode( line(4) ) match {
+						case Some(geo) =>
+							val name = line(3)
+							val category = "team"
+							val location = line(4)
+							val twitter = if (line(5) != "") Some(line(5)) else None
+							val facebook = if (line(6) != "") Some(line(6)) else None
+							val instagram = if (line(7) != "") Some(line(7)) else None
+							val youtube = if (line(9) != "") Some(line(9)) else None
+
+							create(name, "team", facebook, twitter, instagram, youtube, location, geo)
+						case None =>
+					}
+			}
+		)
+
+		reader.close()
+
+		file.delete()
 	}
 	
 	def nearby(geo: Geo, radius: Double): Seq[Feed] = db.withSession { implicit session =>

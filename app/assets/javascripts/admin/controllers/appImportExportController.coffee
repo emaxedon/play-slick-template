@@ -22,7 +22,7 @@ define [ 'appModule' ], (app) ->
 				transformRequest: angular.identity
 				headers: {'Content-Type': undefined} #'multipart/form-data'
 			.success (data, status, headers, config) ->
-				$scope.message = "Successfully imported feeds"
+				$scope.message = "Successfully imported feeds."
 				$scope.info = false
 			.error (data, status, headers, config) ->
 				$scope.error = data.message

@@ -7,10 +7,10 @@ import play.api.libs.json.Json._
 import play.api.libs.json._
 import play.api.Play.current
 import play.api.Logger
+import java.io.File
 import models._
 import services._
 import helpers._
-import java.io.File
 
 object Feeds extends Controller with Secured {
 
@@ -149,12 +149,13 @@ object Feeds extends Controller with Secured {
 
 	def upload = IsAdministrator(parse.multipartFormData) { implicit user => implicit request =>
 		request.body.file("file").map { file =>
-			val filename = file.filename 
 			val contentType = file.contentType
+			val fileName = randomString(10)
+			
+			file.ref.moveTo(new File("/tmp/" + fileName))
 
-			Logger.debug(filename)
-			// TODO: parse file and create feeds
-			// file.ref.moveTo(new File("/tmp",filename))
+			FeedService.importCSV(new File("/tmp/" + fileName))
+
 			Ok(resultJson(1, "successfully imported feeds", JsNull))
 		}.getOrElse {
 			Logger.debug("oops")
