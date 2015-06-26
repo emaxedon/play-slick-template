@@ -29,6 +29,8 @@ require.config
 		'appDashController': 'javascripts/admin/controllers/appDashController'
 		'appUsersController': 'javascripts/admin/controllers/appUsersController'
 		'appFeedsController': 'javascripts/admin/controllers/appFeedsController'
+		'appPopularController': 'javascripts/admin/controllers/appPopularController'
+		'appTrendingController': 'javascripts/admin/controllers/appTrendingController'
 		'appBoot': 'javascripts/admin/appBoot'
 
 require [

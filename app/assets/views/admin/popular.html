@@ -42,31 +42,9 @@
 
 <div class="admin-body">
 	<div class="row">
-		<div class="col-md-6">
-			<div class="panel panel-default">
-				<div class="panel-heading">Recent users ({{ userCount }} users in total)</div>
-				<table class="table">
-					<tr>
-						<th>ID</th>
-						<th>Role</th>
-						<th>Email</th>
-						<th>Registered</th>
-						<th>Location</th>
-					</tr>
-					<tr ng-repeat="user in users">
-						<td>{{ user.id }}</td>
-						<td>{{ user.role }}</td>
-						<td>{{ user.email }}</td>
-						<td>{{ user.dateCreated.time | date:'yy-MM-dd' }}</td>
-						<td>{{ user.location }}</td>
-					</tr>
-				</table>
-			</div>
-		</div>
-		
-		<div class="col-md-6">
-			<div class="panel panel-default">
-				<div class="panel-heading">Recent feeds ({{ feedCount }} feeds in total)</div>
+		<div class="admin-center col-xs-8 col-xs-offset-2">
+			<h2 class="text-center">Popular Feeds</h2>
+			<div class="table-wrapper">
 				<table class="table">
 					<tr>
 						<th>ID</th>
@@ -74,16 +52,26 @@
 						<th>Name</th>
 						<th>Added</th>
 						<th>Location</th>
+						<th></th>
 					</tr>
-					<tr ng-repeat="feed in feeds">
+					<tr ng-repeat="feed in feeds" data-id="{{ feed.id }}" >
 						<td>{{ feed.id }}</td>
 						<td>{{ feed.category }}</td>
 						<td>{{ feed.name }}</td>
 						<td>{{ feed.dateCreated.time | date:'yy-MM-dd' }}</td>
 						<td>{{ feed.location }}</td>
+						<td><button class="btn btn-sm btn-danger" ng-click="remove(feed.id)">remove</button>
 					</tr>
 				</table>
 			</div>
+		</div>
+
+		<div class="alert alert-danger col-xs-8 col-xs-offset-2" ng-show="error">
+			<span class="glyphicon glyphicon-exclamation-sign"></span> {{error}}
+		</div>
+
+		<div class="alert alert-success col-xs-8 col-xs-offset-2" ng-show="message">
+			<span class="glyphicon glyphicon-ok"></span> {{message}}
 		</div>
 	</div>
 </div>

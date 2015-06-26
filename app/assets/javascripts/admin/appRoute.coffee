@@ -16,5 +16,11 @@ define [ 'appModule' ], (app) ->
 			.when '/feeds',
 				templateUrl: 'assets/views/admin/feeds.html'
 				controller: 'FeedsController'
+			.when '/feeds/popular',
+				templateUrl: 'assets/views/admin/popular.html'
+				controller: 'PopularController'
+			.when '/feeds/trending',
+				templateUrl: 'assets/views/admin/trending.html'
+				controller: 'TrendingController'
 			.otherwise redirectTo: '/'
 		]

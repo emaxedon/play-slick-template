@@ -8,6 +8,8 @@ define [
 	'appDashController'
 	'appUsersController'
 	'appFeedsController'
+	'appPopularController'
+	'appTrendingController'
 ], (app) ->
 	app.init = -> angular.bootstrap document, [ 'app' ]
 	app

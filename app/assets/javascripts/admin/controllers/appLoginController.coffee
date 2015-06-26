@@ -1,4 +1,5 @@
 define [ 'appModule' ], (app) ->
+	
 	app.controller 'LoginController', ['$scope', '$http', '$location', 'service', ($scope, $http, $location, service) ->
 		service.user ((data) ->
 			if data.result == 1
