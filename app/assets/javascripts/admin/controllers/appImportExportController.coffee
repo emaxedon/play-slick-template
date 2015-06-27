@@ -20,7 +20,7 @@ define [ 'appModule' ], (app) ->
 
 			$http.post '/feeds/upload', formData,
 				transformRequest: angular.identity
-				headers: {'Content-Type': undefined} #'multipart/form-data'
+				headers: {'Content-Type': undefined}
 			.success (data, status, headers, config) ->
 				$scope.message = "Successfully imported feeds."
 				$scope.info = false
