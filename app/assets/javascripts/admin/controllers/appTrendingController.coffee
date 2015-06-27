@@ -41,7 +41,5 @@ define [ 'appModule' ], (app) ->
 					$scope.message = "Successfully added feed to trending feeds."
 					trending()
 
-		$scope.logout = service.logout
-
 		trending()
 		]

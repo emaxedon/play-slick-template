@@ -1,5 +1,5 @@
 define [ 'appModule' ], (app) ->
-	app.controller 'FeedsController', ['$scope', '$http', '$location', 'service', ($scope, $http, $location, service) ->
+	app.controller 'FeedsController', ['$scope', '$http', 'service', ($scope, $http, service) ->
 		$scope.matches = 0
 		$scope.feeds = []
 		$scope.name = ""
@@ -162,5 +162,4 @@ define [ 'appModule' ], (app) ->
 		
 		$scope.submit = search
 		
-		$scope.logout = service.logout
 		]

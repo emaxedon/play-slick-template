@@ -1,6 +1,6 @@
 define [ 'appModule' ], (app) ->
 
-	app.controller 'ImportExportController', ['$scope', '$http', '$location', 'service', ($scope, $http, $location, service) ->
+	app.controller 'ImportExportController', ['$scope', '$http', 'service', ($scope, $http, service) ->
 		$scope.error = false
 		$scope.message = false
 		$scope.info = false
