@@ -105,7 +105,7 @@ object FeedService {
 
 	def importCSV(file: File) = db.withSession { implicit session =>
 		val reader = CSVReader.open(file)
-		// ,#,League,Teams,City,Twitter,Facebook.com,Instagram,Pinterest,Youtube,Column1
+		
 		reader.foreach( line =>
 			line(3) match {
 				case "" =>
