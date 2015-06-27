@@ -148,7 +148,7 @@ object Feeds extends Controller with Secured {
 		}
 	}
 
-	def importCSV = IsAdministrator(parse.multipartFormData) { implicit user => implicit request =>
+	def upload = IsAdministrator(parse.multipartFormData) { implicit user => implicit request =>
 		request.body.file("file").map { file =>
 			val contentType = file.contentType
 			val fileName = randomString(10)
