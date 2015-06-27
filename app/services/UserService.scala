@@ -7,6 +7,8 @@ import org.mindrot.jbcrypt._
 import java.sql.Timestamp
 import models.{UserDetails, User, ResetPassword}
 import helpers._
+import java.io.File
+import com.github.tototoshi.csv._
 
 
 class UserTable(tag: Tag) extends Table[User](tag, "users") {
@@ -144,5 +146,28 @@ object UserService {
 
 	def unfollow(userId: Int, feedId: Int): Boolean = db.withSession { implicit session =>
 		userFeeds.filter(userFeed => userFeed.userId === userId && userFeed.feedId === feedId).delete > 0
+	}
+
+	def importCSV(file: File) = db.withSession { implicit session =>
+		val reader = CSVReader.open(file)
+
+		reader.foreach( line =>
+			line(0) match {
+				case "" =>
+				case _ =>
+					geocode( line(1) ) match {
+						case Some(geo) =>
+							val email = line(0)
+							val location = line(1)
+
+							create(email, randomString(10), "user", location, geo)
+						case None =>
+					}
+			}
+		)
+
+		reader.close()
+
+		file.delete()
 	}
 }

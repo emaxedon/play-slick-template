@@ -163,5 +163,11 @@ object Feeds extends Controller with Secured {
 			Ok(resultJson(0, "Oops! An error occured.", JsNull))
 		}
 	}
+
+	def download = IsAdministrator(parse.anyContent) { implicit user => implicit request =>
+		val file = FeedService.exportCSV
+		
+		Ok.sendFile(file)
+	}
 	
 }
