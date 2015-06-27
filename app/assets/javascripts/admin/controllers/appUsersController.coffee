@@ -61,7 +61,6 @@ define [ 'appModule' ], (app) ->
 						$scope.userId = id
 						$scope.userDetails =
 							"email": data.data.email
-							"password": ""
 							"role": data.data.role
 							"location": data.data.location
 						$scope.disabled = false

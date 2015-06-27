@@ -179,8 +179,12 @@ object Authentication extends Controller with Secured {
 	}
 
 	def update(id: Int) = IsAdministrator(parse.json) { implicit user => implicit request =>
-		request.body.validate[UserDetails].map { userDetails =>
-			if (UserService.update( id, userDetails ) == 1)
+		request.body.validate[UserUpdate].map { userUpdate =>
+			val someInt = UserService.update( id, userUpdate )
+
+			Logger.debug(someInt.toString)
+			
+			if (someInt == 1)
 				Ok(resultJson(1, "user updated", JsNull))
 			else
 				Ok(resultJson(0, "Oops! Problem updating user.", JsNull))
@@ -201,6 +205,12 @@ object Authentication extends Controller with Secured {
 			Logger.debug("oops")
 			Ok(resultJson(0, "Oops! An error occured.", JsNull))
 		}
+	}
+
+	def download = IsAdministrator(parse.anyContent) { implicit user => implicit request =>
+		val file = UserService.exportCSV
+		
+		Ok.sendFile(file)
 	}
 }
 

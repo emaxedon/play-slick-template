@@ -8,7 +8,7 @@ define [ 'appModule' ], (app) ->
 			$scope.info = "Sending password reset email..."
 			$scope.message = false
 			$scope.error = false
-			$http.post('/auth/forgotPassword', {email: $scope.email})
+			$http.put('/auth/forgotPassword', {email: $scope.email})
 				.success (data, status, headers, config) ->
 					if (data.result == 1)
 						$scope.info = false

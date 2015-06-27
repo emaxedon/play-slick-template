@@ -5,7 +5,7 @@ import play.api.Play.current
 import play.api.Logger
 import org.mindrot.jbcrypt._
 import java.sql.Timestamp
-import models.{UserDetails, User, ResetPassword}
+import models.{UserDetails, UserUpdate, User, ResetPassword}
 import helpers._
 import java.io.File
 import com.github.tototoshi.csv._
@@ -69,12 +69,17 @@ object UserService {
 
 	def remove(id: Int) = db.withSession { implicit session => users.filter(_.id === id).delete }
 	
-	def update(id: Int, details: UserDetails) = db.withSession { implicit session =>
-		if (details.password == "")
-			users.filter(_.id === id).map( u => (u.email, u.role, u.location) ).update( (details.email, details.role.get, details.location) )
-		else
-			users.filter(_.id === id).map( u => (u.email, u.password, u.role, u.location) ).
-				update( (details.email, BCrypt.hashpw(details.password, BCrypt.gensalt()), details.role.get, details.location) )
+	def update(id: Int, details: UserUpdate) = db.withSession { implicit session =>
+		var result = 0
+
+		if (details.email != None)
+			result = users.filter(_.id === id).map( u => u.email ).update( details.email.get )
+		if (details.role != None)
+			result = users.filter(_.id === id).map( u => u.role ).update( details.role.get )
+		if (details.location != None)
+			result = users.filter(_.id === id).map( u => u.location ).update( details.location.get )
+
+		result
 	}
 		
 	def list = db.withSession { implicit session => users.list }
@@ -169,5 +174,18 @@ object UserService {
 		reader.close()
 
 		file.delete()
+	}
+	
+	def exportCSV: File = db.withSession { implicit session =>
+		val file = new File("/tmp/user-export.csv")
+		val writer = CSVWriter.open(file)
+		
+		for (i <- 0 until users.length.run by 100) {
+			for (u <- users.drop( i ).take( 100 ).list)
+				writer.writeRow( List(u.id.get.toString, u.email, u.password, u.role, u.location, u.latitude, u.longitude, u.dateCreated.toString, u.dateUpdated.toString) )
+		}
+		
+		writer.close
+		file
 	}
 }
