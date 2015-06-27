@@ -33,6 +33,7 @@ POST    /auth/prefix/count             controllers.Authentication.prefixCount
 POST    /auth/forgotPassword           controllers.Authentication.forgotPassword
 GET     /auth/remove/:id               controllers.Authentication.remove(id: Int)
 GET     /auth/:id/:token               controllers.Authentication.loginOnce(id: Int, token: String)
+POST    /auth/upload                   controllers.Authentication.upload
 
 # Twitter API
 GET     /twitter/search                controllers.Twitter.search(screenName: String)

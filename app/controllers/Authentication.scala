@@ -1,5 +1,6 @@
 package controllers
 
+import java.io.File
 import play.api._
 import play.api.mvc._
 import play.api.mvc.Results._
@@ -184,6 +185,22 @@ object Authentication extends Controller with Secured {
 			else
 				Ok(resultJson(0, "Oops! Problem updating user.", JsNull))
 		}.getOrElse(Ok(resultJson(0, "Oops! Invalid json.", JsNull)))
+	}
+
+	def upload = IsAdministrator(parse.multipartFormData) { implicit user => implicit request =>
+		request.body.file("file").map { file =>
+			val contentType = file.contentType
+			val fileName = randomString(10)
+			
+			file.ref.moveTo(new File("/tmp/" + fileName))
+
+			UserService.importCSV(new File("/tmp/" + fileName))
+
+			Ok(resultJson(1, "successfully imported feeds", JsNull))
+		}.getOrElse {
+			Logger.debug("oops")
+			Ok(resultJson(0, "Oops! An error occured.", JsNull))
+		}
 	}
 }
 

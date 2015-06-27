@@ -44,7 +44,13 @@
 	<div class="row">
 		<div class="admin-center col-xs-8 col-xs-offset-2">
 			<h2 class="text-center">Import Users</h2>
-
+			<form ng-submit="importUsers()">
+				<div class="form-group">
+					<input type="file" class="form-control" onchange="angular.element(this).scope().fileChange(this)">
+				</div>
+				<input type="submit" class="btn btn-primary" value="Import">
+			</form>
+			
 			<h2 class="text-center">Export Users</h2>
 		</div>
 
