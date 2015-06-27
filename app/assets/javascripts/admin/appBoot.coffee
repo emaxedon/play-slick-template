@@ -1,8 +1,7 @@
 define [
 	'appService'
-	'fileUploadService'
-	'fileModel'
 	'appRoute'
+	'appAdminController'
 	'appForgotPasswordController'
 	'appLoginController'
 	'appDashController'

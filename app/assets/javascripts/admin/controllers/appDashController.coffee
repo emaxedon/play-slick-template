@@ -1,5 +1,5 @@
 define [ 'appModule' ], (app) ->
-	app.controller 'DashController', ['$scope', '$http', '$location', 'service', 'fileUpload', ($scope, $http, $location, service, fileUpload) ->
+	app.controller 'DashController', ['$scope', '$http', 'service', ($scope, $http, service) ->
 		service.loggedin()
 		$http.get('/auth/recent/10')
 			.success (data, status, headers, config) ->
@@ -21,9 +21,4 @@ define [ 'appModule' ], (app) ->
 			.success (data, status, headers, config) ->
 				if data.result == 1
 					$scope.feedCount = data.data.count
-				
-		$scope.logout = service.logout
-		
-		$scope.uploadFile = ->
-			fileUpload $scope.myFile, 'feeds/upload'
 		]

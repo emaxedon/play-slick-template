@@ -42,7 +42,5 @@ define [ 'appModule' ], (app) ->
 					$scope.message = "Successfully added feed to popular feeds."
 					popular()
 
-		$scope.logout = service.logout
-
 		popular()
 		]

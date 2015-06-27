@@ -107,6 +107,4 @@ define [ 'appModule' ], (app) ->
 				response.data.results.map( (item) -> item.formatted_address )
 
 		$scope.submit = search
-		
-		$scope.logout = service.logout
 		]
