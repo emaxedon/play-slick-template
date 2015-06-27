@@ -21,6 +21,7 @@ POST    /auth/login                    controllers.Authentication.login
 POST    /auth/register                 controllers.Authentication.register
 POST    /auth/create                   controllers.Authentication.create
 POST    /auth/upload                   controllers.Authentication.upload
+GET     /auth/download                 controllers.Authentication.download
 GET     /auth/user/:id                 controllers.Authentication.find(id: Int)
 PUT     /auth/user/:id                 controllers.Authentication.update(id: Int)
 PUT     /auth/password                 controllers.Authentication.password
@@ -31,7 +32,7 @@ GET     /auth/count                    controllers.Authentication.count
 GET     /auth/recent/:size             controllers.Authentication.recent(size: Int)
 GET     /auth/search                   controllers.Authentication.search(q: String)
 POST    /auth/prefix/count             controllers.Authentication.prefixCount
-POST    /auth/forgotPassword           controllers.Authentication.forgotPassword
+PUT     /auth/forgotPassword           controllers.Authentication.forgotPassword
 GET     /auth/remove/:id               controllers.Authentication.remove(id: Int)
 GET     /auth/:id/:token               controllers.Authentication.loginOnce(id: Int, token: String)
 

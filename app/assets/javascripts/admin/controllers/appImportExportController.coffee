@@ -46,7 +46,8 @@ define [ 'appModule' ], (app) ->
 				$scope.error = "Oops! Failed to import users."
 				$scope.info = false
 
-		$scope.exportFeeds = ->
-			window.open('/feeds/download')
+		$scope.exportFeeds = -> window.open('/feeds/download')
+
+		$scope.exportUsers = -> window.open('/auth/download')
 			
 		]

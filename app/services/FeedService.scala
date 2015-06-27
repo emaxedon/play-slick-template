@@ -137,7 +137,7 @@ object FeedService {
 		
 		for (i <- 0 until feeds.length.run by 100) {
 			for (f <- feeds.drop( i ).take( 100 ).list)
-				writer.writeRow( List(f.name, f.category, f.location, f.latitude, f.longitude, f.facebookPicture, f.facebookCover,
+				writer.writeRow( List(f.id.get.toString, f.name, f.category, f.location, f.latitude, f.longitude, f.facebookPicture.getOrElse(""), f.facebookCover.getOrElse(""),
 					f.facebookApi.getOrElse(""), f.twitterApi.getOrElse(""), f.instagramApi.getOrElse(""), f.youtubeApi.getOrElse(""),
 					f.dateCreated.toString, f.dateUpdated.toString) )
 		}

@@ -24,6 +24,12 @@ case class UserAuth(
 	password: String
 )
 
+case class UserUpdate(
+	email: Option[String],
+	role: Option[String],
+	location: Option[String]
+)
+
 /** Holds validated request JSON user registration */
 case class UserDetails(
 	email: String,
@@ -74,4 +80,10 @@ object UserDetails {
 
 	implicit val userRegistrationFormat = Json.format[UserDetails]
 
+}
+
+object UserUpdate {
+	
+	implicit val userUpdateFormat = Json.format[UserUpdate]
+	
 }
