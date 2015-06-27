@@ -20,6 +20,7 @@ GET     /api/documentation             controllers.Application.documentation
 POST    /auth/login                    controllers.Authentication.login
 POST    /auth/register                 controllers.Authentication.register
 POST    /auth/create                   controllers.Authentication.create
+POST    /auth/upload                   controllers.Authentication.upload
 GET     /auth/user/:id                 controllers.Authentication.find(id: Int)
 PUT     /auth/user/:id                 controllers.Authentication.update(id: Int)
 PUT     /auth/password                 controllers.Authentication.password
@@ -33,7 +34,6 @@ POST    /auth/prefix/count             controllers.Authentication.prefixCount
 POST    /auth/forgotPassword           controllers.Authentication.forgotPassword
 GET     /auth/remove/:id               controllers.Authentication.remove(id: Int)
 GET     /auth/:id/:token               controllers.Authentication.loginOnce(id: Int, token: String)
-POST    /auth/upload                   controllers.Authentication.upload
 
 # Twitter API
 GET     /twitter/search                controllers.Twitter.search(screenName: String)
@@ -54,6 +54,8 @@ GET     /feeds/search                  controllers.Feeds.search(q: String)
 GET     /feeds/popular                 controllers.Feeds.popular
 GET     /feeds/trending                controllers.Feeds.trending
 GET     /feeds/nearby                  controllers.Feeds.nearby(radius: Double ?= 50)
+POST    /feeds/upload                  controllers.Feeds.upload
+GET     /feeds/download                controllers.Feeds.download
 GET     /feeds/:id                     controllers.Feeds.find(id: Int)
 GET     /feeds/:id/timeline            controllers.Feeds.timeline(id: Int, page: Int ?= 1, pageSize: Int ?= 10)
 PUT     /feeds/:id                     controllers.Feeds.update(id: Int)
@@ -65,4 +67,3 @@ GET     /feeds/popular/add/:id         controllers.Feeds.addPopular(id: Int)
 GET     /feeds/popular/remove/:id      controllers.Feeds.removePopular(id: Int)
 GET     /feeds/trending/add/:id        controllers.Feeds.addTrending(id: Int)
 GET     /feeds/trending/remove/:id     controllers.Feeds.removeTrending(id: Int)
-POST    /feeds/upload                  controllers.Feeds.upload

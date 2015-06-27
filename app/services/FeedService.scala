@@ -131,6 +131,21 @@ object FeedService {
 		file.delete()
 	}
 	
+	def exportCSV: File = db.withSession { implicit session =>
+		val file = new File("/tmp/feed-export.csv")
+		val writer = CSVWriter.open(file)
+		
+		for (i <- 0 until feeds.length.run by 100) {
+			for (f <- feeds.drop( i ).take( 100 ).list)
+				writer.writeRow( List(f.name, f.category, f.location, f.latitude, f.longitude, f.facebookPicture, f.facebookCover,
+					f.facebookApi.getOrElse(""), f.twitterApi.getOrElse(""), f.instagramApi.getOrElse(""), f.youtubeApi.getOrElse(""),
+					f.dateCreated.toString, f.dateUpdated.toString) )
+		}
+		
+		writer.close
+		file
+	}
+	
 	def nearby(geo: Geo, radius: Double): Seq[Feed] = db.withSession { implicit session =>
 		val (sw, ne) = geoBoundingBox( geo, radius )
 		
