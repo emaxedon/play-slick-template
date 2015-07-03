@@ -11,5 +11,5 @@ define [ 'appModule' ], (app) ->
 
 		$scope.info = (s) -> $scope.message = type: 'info', text: s
 		
-		$scope.none()
+		$scope.clear()
 		]
