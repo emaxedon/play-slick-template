@@ -33,12 +33,8 @@
 			</div>
 		</div>
 
-		<div class="alert alert-danger col-xs-8 col-xs-offset-2" ng-show="error">
-			<span class="glyphicon glyphicon-exclamation-sign"></span> {{error}}
-		</div>
-
-		<div class="alert alert-success col-xs-8 col-xs-offset-2" ng-show="message">
-			<span class="glyphicon glyphicon-ok"></span> {{message}}
+		<div class="col-xs-8 col-xs-offset-2">
+			<ng-include src="'assets/views/admin/message.html'"></ng-include>
 		</div>
 	</div>
 </div>
