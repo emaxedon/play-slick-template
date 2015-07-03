@@ -15,6 +15,7 @@ define [ 'appModule' ], (app) ->
 
 		$scope.editorOptions =
 		    language: 'en'
+		    height: '200px'
 
 		$scope.create = ->
 			$scope.newsletterDetails =

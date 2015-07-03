@@ -33,12 +33,12 @@
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label>Name</label>
-							<input type="text" ng-model="feedDetails.name" id="inputName" class="form-control" required>
+							<input type="text" ng-model="feedDetails.name" class="form-control" required>
 						</div>
 
 						<div class="form-group">
 							<label>Type</label>
-							<select ng-model="feedDetails.category" id="inputRole" class="form-control">
+							<select ng-model="feedDetails.category" class="form-control">
 								<option value="league">League</option>
 								<option value="team">Team</option>
 								<option value="player">Player</option>
@@ -47,7 +47,7 @@
 
 						<div class="form-group">
 							<label>Location</label>
-							<input type="text" ng-model="feedDetails.location" ng-model-options="{ debounce: 250 }" id="inputLocation" class="form-control"
+							<input type="text" ng-model="feedDetails.location" ng-model-options="{ debounce: 250 }" class="form-control"
 								typeahead="item for item in getLocation($viewValue)" required>
 						</div>
 					</div>
@@ -55,25 +55,25 @@
 					<div class="col-xs-6">
 						<div class="form-group">
 							<label>Facebook</label>
-							<input type="text" ng-model="feedDetails.facebookApi" ng-model-options="{ debounce: 250 }" id="inputFacebook" class="form-control" typeahead="item for item in getFacebookPageName($viewValue)" typeahead-template-url="customTemplate.html" typeahead-on-select="onFacebookSelect($item, $model, $label)">
+							<input type="text" ng-model="feedDetails.facebookApi" ng-model-options="{ debounce: 250 }" class="form-control" typeahead="item for item in getFacebookPageName($viewValue)" typeahead-template-url="customTemplate.html" typeahead-on-select="onFacebookSelect($item, $model, $label)">
 						</div>
 
 						<div class="form-group">
 							<label>Twitter username</label>
 							<div class="input-group">
 								<span class="input-group-addon">&#64;</span>
-								<input type="text" ng-model="feedDetails.twitterApi" ng-model-options="{ debounce: 250 }" id="inputTwitter" class="form-control" typeahead="item for item in getTwitterUsername($viewValue)" typeahead-template-url="customTemplate.html" typeahead-on-select="onTwitterSelect($item, $model, $label)">
+								<input type="text" ng-model="feedDetails.twitterApi" ng-model-options="{ debounce: 250 }" class="form-control" typeahead="item for item in getTwitterUsername($viewValue)" typeahead-template-url="customTemplate.html" typeahead-on-select="onTwitterSelect($item, $model, $label)">
 							</div>
 						</div>
 
 						<div class="form-group">
 							<label>Instagram username</label>
-							<input type="text" ng-model="feedDetails.instagramApi" ng-model-options="{ debounce: 250 }" id="inputInstagram" class="form-control" typeahead="item for item in getInstagramUsername($viewValue)" typeahead-template-url="customTemplate.html" typeahead-on-select="onInstagramSelect($item, $model, $label)">
+							<input type="text" ng-model="feedDetails.instagramApi" ng-model-options="{ debounce: 250 }" class="form-control" typeahead="item for item in getInstagramUsername($viewValue)" typeahead-template-url="customTemplate.html" typeahead-on-select="onInstagramSelect($item, $model, $label)">
 						</div>
 
 						<div class="form-group">
 							<label>YouTube</label>
-							<input type="text" ng-model="feedDetails.youtubeApi" id="inputYoutube" class="form-control">
+							<input type="text" ng-model="feedDetails.youtubeApi" class="form-control">
 						</div>
 					</div>
 				</div>
