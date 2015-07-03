@@ -126,7 +126,7 @@ define [ 'appModule' ], (app) ->
 					.success (data, status, headers, config) ->
 						if data.result == 1
 							$scope.disabled = false
-							$scope.message = "Successfully updated feed."
+							$scope.success 'Successfully updated feed.'
 							search()
 						else
 							$scope.error = data.message

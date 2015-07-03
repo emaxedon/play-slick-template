@@ -34,7 +34,7 @@
 					<div class="col-xs-6">
 						<button class="btn btn-primary" type="submit" ng-disabled="disabled" ng-show="form == 'edit'">Save</button>
 						<button class="btn btn-primary" type="submit" ng-disabled="disabled" ng-show="form == 'create'">Add</button>
-						<button class="btn btn-success" type="button" ng-click="send()" ng-disabled="disabled" ng-show="status == 0">Send</button>
+						<button class="btn btn-success" type="button" ng-click="send()" ng-disabled="disabled" ng-show="form == 'edit' && status == 0">Send</button>
 					</div>
 					<div class="col-xs-6 text-right" ng-show="form == 'edit'">
 						<button class="btn btn-danger" type="button" ng-click="remove()" ng-disabled="disabled">Remove</button>
