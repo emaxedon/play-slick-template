@@ -45,16 +45,21 @@
 				</div>
 			</form>
 
-			<div class="alert alert-danger" ng-show="error">
-				<span class="glyphicon glyphicon-exclamation-sign"></span> {{error}}
-			</div>
+			<div ng-switch on="key()">
+				<div class="alert alert-danger" ng-switch-when="error">
+					<span class="glyphicon glyphicon-exclamation-sign"></span> {{message.error}}
+				</div>
 
-			<div class="alert alert-success" ng-show="message">
-				<span class="glyphicon glyphicon-ok"></span> {{message}}
-			</div>
+				<div class="alert alert-success" ng-switch-when="success">
+					<span class="glyphicon glyphicon-ok"></span> {{message.success}}
+				</div>
 
-			<div class="alert alert-info" ng-show="info">
-				{{info}}
+				<div class="alert alert-info" ng-switch-when="info">
+					{{message.info}}
+				</div>
+
+				<div ng-switch-when="none">
+				</div>
 			</div>
 		</div>
 	</div>
