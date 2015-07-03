@@ -91,13 +91,7 @@
 				</div>
 			</form>
 
-			<div class="alert alert-danger" ng-show="error">
-				<span class="glyphicon glyphicon-exclamation-sign"></span> {{error}}
-			</div>
-
-			<div class="alert alert-success" ng-show="message">
-				<span class="glyphicon glyphicon-ok"></span> {{message}}
-			</div>
+			<ng-include src="'assets/views/admin/message.html'"></ng-include>
 		</div>
 	</div>
 </div>
