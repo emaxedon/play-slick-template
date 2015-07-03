@@ -23,7 +23,8 @@ libraryDependencies ++= Seq(
 	"org.webjars" % "angularjs" % "1.4.0",
 	"org.webjars" % "angular-ui-bootstrap" % "0.13.0",
 	"org.webjars" % "bootstrap" % "3.3.4",
-	"org.webjars" % "requirejs" % "2.1.17"
+	"org.webjars" % "requirejs" % "2.1.17",
+	"org.webjars" % "ng-ckeditor" % "0.2"
 )
 
 includeFilter in (Assets, LessKeys.less) := "*.less"

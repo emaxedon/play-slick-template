@@ -13,6 +13,9 @@ define [ 'appModule' ], (app) ->
 					if data.result == 1
 						$scope.newsletters = data.data
 
+		$scope.editorOptions =
+		    language: 'en'
+
 		$scope.create = ->
 			$scope.newsletterDetails =
 				"subject": ""

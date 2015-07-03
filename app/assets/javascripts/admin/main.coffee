@@ -11,6 +11,8 @@ require.config
 			exports: 'angular'
 		'angular-ui-bootstrap':
 			deps: [ 'angular' ]
+		'ngCkeditor':
+			deps: [ 'angular', 'ckeditor' ]
 
 	paths:
 		'jquery': 'lib/jquery/jquery.min'
@@ -18,6 +20,8 @@ require.config
 		'angular': 'lib/angularjs/angular.min'
 		'ngRoute': 'lib/angularjs/angular-route.min'
 		'angular-ui-bootstrap': 'lib/angular-ui-bootstrap/ui-bootstrap-tpls.min'
+		'ngCkeditor': 'lib/ng-ckeditor/ng-ckeditor'
+		'ckeditor': 'ckeditor/ckeditor'
 		
 		'appModule': 'javascripts/admin/appModule'
 		'appService': 'javascripts/admin/services/appService'
