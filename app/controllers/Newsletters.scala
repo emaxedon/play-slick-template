@@ -26,7 +26,7 @@ object Newsletters extends Controller with Secured {
 			val email = Json.obj(
 				"key" -> mandrillKey,
 				"message" -> Json.obj(
-					"text" -> details.text,
+					"html" -> details.text,
 					"subject" -> details.subject,
 					"from_email" -> "emaxedon@gmail.com",
 					"to" -> UserService.list.map(u => Json.obj("email" -> u.email))
