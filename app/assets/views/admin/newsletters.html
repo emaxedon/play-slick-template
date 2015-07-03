@@ -45,17 +45,17 @@
 				</div>
 			</form>
 
-			<div ng-switch on="key()">
+			<div ng-switch on="message.type">
 				<div class="alert alert-danger" ng-switch-when="error">
-					<span class="glyphicon glyphicon-exclamation-sign"></span> {{message.error}}
+					<span class="glyphicon glyphicon-exclamation-sign"></span> {{message.text}}
 				</div>
 
 				<div class="alert alert-success" ng-switch-when="success">
-					<span class="glyphicon glyphicon-ok"></span> {{message.success}}
+					<span class="glyphicon glyphicon-ok"></span> {{message.text}}
 				</div>
 
 				<div class="alert alert-info" ng-switch-when="info">
-					{{message.info}}
+					{{message.text}}
 				</div>
 
 				<div ng-switch-when="none">
