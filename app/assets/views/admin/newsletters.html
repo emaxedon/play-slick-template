@@ -1,0 +1,61 @@
+<ng-include src="'assets/views/admin/navbar.html'"></ng-include>
+
+<div class="admin-body">
+	<div class="row">
+		<div class="admin-left">
+			<button class="btn btn-primary btn-block" ng-click="create()">Compose new newsletter</button>
+
+			<ul>
+				<li ng-repeat="newsletter in newsletters" data-id="{{ newsletter.id }}" ng-click="edit(newsletter.id)">
+					{{ newsletter.subject }} <span class="badge">{{ newsletter.status == 0 ? "Draft" : "Sent" }}</span>
+				</li>
+			</ul>
+		</div>
+		
+		<div class="admin-right">
+			<form ng-submit="formSubmit()" ng-show="form">
+				<h2 class="text-center">{{form == 'edit' ? "Edit" : "Create"}} newsletter</h2>
+
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="form-group">
+							<label>Subject</label>
+							<input type="text" ng-disabled="disabled" ng-model="newsletterDetails.subject" id="inputSubject" class="form-control" required>
+						</div>
+
+						<div class="form-group">
+							<label>Text</label>
+							<input type="text" ng-disabled="disabled" ng-model="newsletterDetails.text" id="inputSubject" class="form-control" required>
+						</div>
+					</div>
+				</div>
+				
+				<div class="row">
+					<div class="col-xs-6">
+						<button class="btn btn-primary" type="submit" ng-disabled="disabled" ng-show="form == 'edit'">Save</button>
+						<button class="btn btn-primary" type="submit" ng-disabled="disabled" ng-show="form == 'create'">Add</button>
+						<button class="btn btn-success" type="button" ng-click="send()" ng-disabled="disabled" ng-show="status == 0">Send</button>
+					</div>
+					<div class="col-xs-6 text-right" ng-show="form == 'edit'">
+						<button class="btn btn-danger" type="button" ng-click="remove()" ng-disabled="disabled">Remove</button>
+					</div>
+					<div class="col-xs-6 text-right" ng-show="form == 'create'">
+						<button class="btn btn-danger" type="button" ng-click="cancel()" ng-disabled="disabled">Cancel</button>
+					</div>
+				</div>
+			</form>
+
+			<div class="alert alert-danger" ng-show="error">
+				<span class="glyphicon glyphicon-exclamation-sign"></span> {{error}}
+			</div>
+
+			<div class="alert alert-success" ng-show="message">
+				<span class="glyphicon glyphicon-ok"></span> {{message}}
+			</div>
+
+			<div class="alert alert-info" ng-show="info">
+				{{info}}
+			</div>
+		</div>
+	</div>
+</div>

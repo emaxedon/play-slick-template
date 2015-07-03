@@ -10,6 +10,7 @@ define [
 	'appPopularController'
 	'appTrendingController'
 	'appImportExportController'
+	'appNewslettersController'
 ], (app) ->
 	app.init = -> angular.bootstrap document, [ 'app' ]
 	app

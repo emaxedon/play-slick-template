@@ -68,3 +68,11 @@ GET     /feeds/popular/add/:id         controllers.Feeds.addPopular(id: Int)
 GET     /feeds/popular/remove/:id      controllers.Feeds.removePopular(id: Int)
 GET     /feeds/trending/add/:id        controllers.Feeds.addTrending(id: Int)
 GET     /feeds/trending/remove/:id     controllers.Feeds.removeTrending(id: Int)
+
+# Newsletter API
+GET     /newsletters                   controllers.Newsletters.list
+POST    /newsletters/create            controllers.Newsletters.create
+POST    /newsletters/send/:id          controllers.Newsletters.send(id: Int)
+GET     /newsletters/:id               controllers.Newsletters.find(id: Int)
+PUT     /newsletters/:id               controllers.Newsletters.update(id: Int)
+GET     /newsletters/remove/:id        controllers.Newsletters.remove(id: Int)
