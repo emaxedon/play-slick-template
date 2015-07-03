@@ -15,16 +15,8 @@
 			<button class="btn btn-primary" ng-click="exportFeeds()">Export</button>
 		</div>
 
-		<div class="alert alert-danger col-xs-8 col-xs-offset-2" ng-show="error">
-			<span class="glyphicon glyphicon-exclamation-sign"></span> {{error}}
-		</div>
-
-		<div class="alert alert-success col-xs-8 col-xs-offset-2" ng-show="message">
-			<span class="glyphicon glyphicon-ok"></span> {{message}}
-		</div>
-
-		<div class="alert alert-info col-xs-8 col-xs-offset-2" ng-show="info">
-			{{info}}
+		<div class="col-xs-8 col-xs-offset-2">
+			<ng-include src="'assets/views/admin/message.html'"></ng-include>
 		</div>
 	</div>
 </div>
