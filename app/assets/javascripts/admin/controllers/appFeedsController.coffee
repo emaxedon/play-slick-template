@@ -2,7 +2,8 @@ define [ 'appModule' ], (app) ->
 	app.controller 'FeedsController', ['$scope', '$http', 'service', ($scope, $http, service) ->
 		$scope.matches = 0
 		$scope.feeds = []
-		$scope.name = ""
+		$scope.name = ""		
+		$scope.clear()
 		service.loggedin()
 		
 		search = ->
@@ -60,14 +61,13 @@ define [ 'appModule' ], (app) ->
 				$scope.feeds = []
 				
 		$scope.remove = ->
-			$scope.error = false
-			$scope.message = false
+			$scope.clear()
 
 			$http.get('/feeds/remove/' + $scope.feedId)
 				.success (data, status, headers, config) ->
 					if data.result == 1
 						$scope.form = false
-						$scope.message = "Successfully deleted feed."
+						$scope.success 'Successfully deleted feed.'
 						search()
 		
 		$scope.create = ->
@@ -80,18 +80,15 @@ define [ 'appModule' ], (app) ->
 				"youtubeApi": ""
 				"location": ""
 			$scope.disabled = false
-			$scope.error = false
-			$scope.message = false
+			$scope.clear()
 			$scope.form = 'create'
 
 		$scope.cancel = -> 
 			$scope.form = false
-			$scope.error = false
-			$scope.message = false
+			$scope.clear()
 		
 		$scope.edit = (id) ->
-			$scope.error = false
-			$scope.message = false
+			$scope.clear()
 
 			$http.get('/feeds/' + id)
 				.success (data, status, headers, config) ->
@@ -110,8 +107,7 @@ define [ 'appModule' ], (app) ->
 		
 		$scope.formSubmit = ->
 			$scope.disabled = true
-			$scope.error = false
-			$scope.message = false
+			$scope.clear()
 			
 			if $scope.feedDetails['facebookApi'] == ""
 				delete $scope.feedDetails['facebookApi']
@@ -135,7 +131,7 @@ define [ 'appModule' ], (app) ->
 						else
 							$scope.error = data.message
 					.error (data, status, headers, config) ->
-						$scope.error = "Oops! Problem editing feed. Please try again."
+						$scope.error 'Oops! Problem editing feed. Please try again.'
 						$scope.disabled = false
 			else
 				$http.post( '/feeds/create', $scope.feedDetails )
@@ -143,13 +139,13 @@ define [ 'appModule' ], (app) ->
 						if data.result == 1
 							$scope.form = false
 							$scope.disabled = false
-							$scope.message = "Successfully created new feed."
+							$scope.success 'Successfully created new feed.'
 							search()
 						else
 							$scope.disabled = false
-							$scope.error = data.message
+							$scope.error data.message
 					.error (data, status, headers, config) ->
-						$scope.error = "Oops! Problem adding feed. Please try again."
+						$scope.error 'Oops! Problem adding feed. Please try again.'
 						$scope.disabled = false
 
 		$scope.getLocation = (val) ->

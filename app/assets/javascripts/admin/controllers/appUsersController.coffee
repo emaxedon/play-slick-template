@@ -3,6 +3,7 @@ define [ 'appModule' ], (app) ->
 		$scope.matches = 0
 		$scope.users = []
 		$scope.email = ""
+		$scope.clear()
 		service.loggedin()
 		
 		search = ->
