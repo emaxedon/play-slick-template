@@ -6,23 +6,18 @@ define [ 'appModule' ], (app) ->
 		$scope.submit = ->
 			$scope.disabled = true
 			$scope.info = "Sending password reset email..."
-			$scope.message = false
-			$scope.error = false
+			$scope.clear()
+
 			$http.put('/auth/forgotPassword', {email: $scope.email})
 				.success (data, status, headers, config) ->
 					if (data.result == 1)
-						$scope.info = false
-						$scope.message = "Password reset email has been sent"
+						$scope.success 'Password reset email has been sent'
 						$scope.form = false
 					else
-						$scope.error = data.message
-						$scope.message = false
-						$scope.info = false
+						$scope.error data.message
 						
 					$scope.disabled = false
 				.error (data, status, headers, config) ->
-					$scope.message = false
-					$scope.info = false
-					$scope.error = "Error resetting password - try again"
+					$scope.error 'Error resetting password - please try again'
 					$scope.disabled = false
 		]

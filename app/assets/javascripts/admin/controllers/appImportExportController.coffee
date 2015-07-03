@@ -1,9 +1,7 @@
 define [ 'appModule' ], (app) ->
 
 	app.controller 'ImportExportController', ['$scope', '$http', 'service', ($scope, $http, service) ->
-		$scope.error = false
-		$scope.message = false
-		$scope.info = false
+		$scope.clear()
 		service.loggedin()
 
 		$scope.fileChange = (elem) ->
@@ -11,9 +9,8 @@ define [ 'appModule' ], (app) ->
 			$scope.$apply()
 
 		$scope.importFeeds = ->
-			$scope.info = "Importing feeds..."
-			$scope.message = false
-			$scope.error = false
+			$scope.clear()
+			$scope.info 'Importing feeds...'
 
 			formData = new FormData()
 			formData.append('file', $scope.file)
@@ -22,16 +19,13 @@ define [ 'appModule' ], (app) ->
 				transformRequest: angular.identity
 				headers: {'Content-Type': undefined}
 			.success (data, status, headers, config) ->
-				$scope.message = "Successfully imported feeds."
-				$scope.info = false
+				$scope.success 'Successfully imported feeds.'
 			.error (data, status, headers, config) ->
-				$scope.error = "Oops! Failed to import feeds."
-				$scope.info = false
+				$scope.error 'Oops! Failed to import feeds.'
 
 		$scope.importUsers = ->
-			$scope.info = "Importing users..."
-			$scope.message = false
-			$scope.error = false
+			$scope.clear()
+			$scope.info 'Importing users...'
 
 			formData = new FormData()
 			formData.append('file', $scope.file)
@@ -40,11 +34,9 @@ define [ 'appModule' ], (app) ->
 				transformRequest: angular.identity
 				headers: {'Content-Type': undefined}
 			.success (data, status, headers, config) ->
-				$scope.message = "Successfully imported users."
-				$scope.info = false
+				$scope.success 'Successfully imported users.'
 			.error (data, status, headers, config) ->
-				$scope.error = "Oops! Failed to import users."
-				$scope.info = false
+				$scope.error 'Oops! Failed to import users.'
 
 		$scope.exportFeeds = -> window.open('/feeds/download')
 

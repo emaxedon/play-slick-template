@@ -2,8 +2,7 @@ define [ 'appModule' ], (app) ->
 
 	app.controller 'PopularController', ['$scope', '$http', '$location', 'service', ($scope, $http, $location, service) ->
 		$scope.feeds = []
-		$scope.error = false
-		$scope.message = false
+		$scope.clear()
 		service.loggedin()
 
 		popular = ->
@@ -23,23 +22,21 @@ define [ 'appModule' ], (app) ->
 			$scope.feedId = $item.id
 
 		$scope.remove = (id) ->
-			$scope.error = false
-			$scope.message = false
+			$scope.clear()
 
 			$http.get '/feeds/popular/remove/' + id
 				.success (data, status, headers, config) ->
 					if data.result == 1
-						$scope.message = "Successfully removed feed from popular feeds."
+						$scope.success 'Successfully removed feed from popular feeds.'
 						popular()
 		
 		$scope.add = ->
 			$scope.name = ""
-			$scope.error = false
-			$scope.message = false
+			$scope.clear()
 
 			$http.get '/feeds/popular/add/' + $scope.feedId
 				.success (data, status, headers, config) ->
-					$scope.message = "Successfully added feed to popular feeds."
+					$scope.success 'Successfully added feed to popular feeds.'
 					popular()
 
 		popular()

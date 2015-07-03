@@ -10,19 +10,21 @@ define [ 'appModule' ], (app) ->
 			$scope.show = true
 
 		$scope.submit = ->
+			$scope.clear()
 			$scope.disabled = true
+
 			$http.post('/auth/login', {email: $scope.email, password: $scope.password})
 				.success (data, status, headers, config) ->
 					$scope.disabled = false
 					
 					if (data.result == 1)
 						if (data.data.role != "admin")
-							$scope.error = "Oops! Not an administrator account."
+							$scope.error 'Oops! Not an administrator account.'
 							service.logout()
 						else
 							$location.path '/dash'
 					else
-						$scope.error = data.message
+						$scope.error data.message
 				.error (data, status, headers, config) ->
-					$scope.error = "Error logging in - try again."
+					$scope.error 'Error logging in - please try again.'
 		]

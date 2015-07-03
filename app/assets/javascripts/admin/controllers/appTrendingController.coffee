@@ -1,8 +1,7 @@
 define [ 'appModule' ], (app) ->
 	app.controller 'TrendingController', ['$scope', '$http', '$location', 'service', ($scope, $http, $location, service) ->
 		$scope.feeds = []
-		$scope.error = false
-		$scope.message = false
+		$scope.clear()
 		service.loggedin()
 
 		trending = ->
@@ -22,23 +21,21 @@ define [ 'appModule' ], (app) ->
 			$scope.feedId = $item.id
 
 		$scope.remove = (id) ->
-			$scope.error = false
-			$scope.message = false
+			$scope.clear()
 
 			$http.get '/feeds/trending/remove/' + id
 				.success (data, status, headers, config) ->
 					if data.result == 1
-						$scope.message = "Successfully removed feed from trending feeds."
+						$scope.success 'Successfully removed feed from trending feeds.'
 						trending()
 		
 		$scope.add = ->
 			$scope.name = ""
-			$scope.error = false
-			$scope.message = false
+			$scope.clear()
 
 			$http.get '/feeds/trending/add/' + $scope.feedId
 				.success (data, status, headers, config) ->
-					$scope.message = "Successfully added feed to trending feeds."
+					$scope.success 'Successfully added feed to trending feeds.'
 					trending()
 
 		trending()

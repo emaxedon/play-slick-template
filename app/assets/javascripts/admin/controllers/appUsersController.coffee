@@ -27,14 +27,13 @@ define [ 'appModule' ], (app) ->
 				$scope.users = []
 				
 		$scope.remove = ->
-			$scope.error = false
-			$scope.message = false
+			$scope.clear()
 
 			$http.get('/auth/remove/' + $scope.userId)
 				.success (data, status, headers, config) ->
 					if data.result == 1
 						$scope.form = false
-						$scope.message = "Successfully deleted user."
+						$scope.success 'Successfully deleted user.'
 						search()
 		
 		$scope.create = ->
@@ -44,18 +43,16 @@ define [ 'appModule' ], (app) ->
 				"role": "user"
 				"location": ""
 			$scope.disabled = false
-			$scope.error = false
-			$scope.message = false
+			$scope.clear()
 			$scope.form = 'create'
 
 		$scope.cancel = -> 
 			$scope.form = false
-			$scope.error = false
-			$scope.message = false
+			$scope.clear()
 		
 		$scope.edit = (id) ->
-			$scope.error = false
-			$scope.message = false
+			$scope.clear()
+
 			$http.get('/auth/user/' + id)
 				.success (data, status, headers, config) ->
 					if data.result == 1
@@ -69,34 +66,33 @@ define [ 'appModule' ], (app) ->
 			
 		$scope.formSubmit = ->
 			$scope.disabled = true
-			$scope.error = false
-			$scope.message = false
+			$scope.clear()
 
 			if $scope.form == 'edit'
 				$http.put('/auth/user/' + $scope.userId, $scope.userDetails )
 					.success (data, status, headers, config) ->
 						if data.result == 1
 							$scope.disabled = false
-							$scope.message = "Successfully updated user."
+							$scope.success 'Successfully updated user.'
 							search()
 						else
-							$scope.error = data.message
+							$scope.error data.message
 							$scope.disabled = false
 					.error (data, status, headers, config) ->
-						$scope.error = "Oops! Problem editing user. Try again."
+						$scope.error 'Oops! Problem editing user. Try again.'
 			else
 				$http.post( '/auth/create', $scope.userDetails )
 					.success (data, status, headers, config) ->
 						if data.result == 1
 							$scope.form = false
 							$scope.disabled = false
-							$scope.message = "Successfully created new user."
+							$scope.success 'Successfully created new user.'
 							search()
 						else
-							$scope.error = data.message
+							$scope.error data.message
 							$scope.disabled = false
 					.error (data, status, headers, config) ->
-						$scope.error = "Oops! Problem creating user. Try again."
+						$scope.error 'Oops! Problem creating user. Try again.'
 
 		$scope.getLocation = (val) ->
 			$http.get 'http://maps.googleapis.com/maps/api/geocode/json',
