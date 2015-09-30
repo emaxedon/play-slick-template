@@ -13,21 +13,6 @@ define [ 'appModule' ], (app) ->
 			.when '/users',
 				templateUrl: 'assets/views/admin/user/users.html'
 				controller: 'UsersController'
-			.when '/users/import-export',
-				templateUrl: 'assets/views/admin/user/import-export.html'
-				controller: 'ImportExportController'
-			.when '/feeds',
-				templateUrl: 'assets/views/admin/feed/feeds.html'
-				controller: 'FeedsController'
-			.when '/feeds/import-export',
-				templateUrl: 'assets/views/admin/feed/import-export.html'
-				controller: 'ImportExportController'
-			.when '/feeds/popular',
-				templateUrl: 'assets/views/admin/feed/popular.html'
-				controller: 'PopularController'
-			.when '/feeds/trending',
-				templateUrl: 'assets/views/admin/feed/trending.html'
-				controller: 'TrendingController'
 			.when '/newsletters',
 				templateUrl: 'assets/views/admin/newsletters.html'
 				controller: 'NewslettersController'

@@ -12,7 +12,7 @@ define [ 'appModule' ], (app) ->
 					params:
 						q: $scope.email
 				.success (data, status, headers, config) ->
-					if data.result == 1
+					if data != null
 						$scope.matches = data.data.users.length
 						$scope.users = data.data.users
 			else
@@ -31,7 +31,7 @@ define [ 'appModule' ], (app) ->
 
 			$http.get('/auth/remove/' + $scope.userId)
 				.success (data, status, headers, config) ->
-					if data.result == 1
+					if data != null
 						$scope.form = false
 						$scope.success 'Successfully deleted user.'
 						search()
@@ -55,7 +55,7 @@ define [ 'appModule' ], (app) ->
 
 			$http.get('/auth/user/' + id)
 				.success (data, status, headers, config) ->
-					if data.result == 1
+					if data != null
 						$scope.userId = id
 						$scope.userDetails =
 							"email": data.data.email
@@ -71,7 +71,7 @@ define [ 'appModule' ], (app) ->
 			if $scope.form == 'edit'
 				$http.put('/auth/user/' + $scope.userId, $scope.userDetails )
 					.success (data, status, headers, config) ->
-						if data.result == 1
+						if data != null
 							$scope.disabled = false
 							$scope.success 'Successfully updated user.'
 							search()
@@ -83,7 +83,7 @@ define [ 'appModule' ], (app) ->
 			else
 				$http.post( '/auth/create', $scope.userDetails )
 					.success (data, status, headers, config) ->
-						if data.result == 1
+						if data != null
 							$scope.form = false
 							$scope.disabled = false
 							$scope.success 'Successfully created new user.'

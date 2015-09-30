@@ -2,7 +2,7 @@ define [ 'appModule' ], (app) ->
 	
 	app.controller 'LoginController', ['$scope', '$http', '$location', 'service', ($scope, $http, $location, service) ->
 		service.user ((data) ->
-			if data.result == 1
+			if data != null
 				$location.path '/dash'
 			else
 				$scope.show = true
@@ -17,7 +17,7 @@ define [ 'appModule' ], (app) ->
 				.success (data, status, headers, config) ->
 					$scope.disabled = false
 					
-					if (data.result == 1)
+					if (data != null)
 						if (data.data.role != "admin")
 							$scope.error 'Oops! Not an administrator account.'
 							service.logout()

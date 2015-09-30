@@ -7,7 +7,7 @@ define [ 'appModule' ], (app) ->
 		loggedin: ->
 			$http.get('/auth/user')
 				.success (data, status, headers, config) ->
-					if (data.result != 1)
+					if (data == null)
 						$location.path '/'
 		user: (success, error) ->
 			$http.get('/auth/user')

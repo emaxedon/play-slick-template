@@ -10,7 +10,7 @@ define [ 'appModule' ], (app) ->
 
 			$http.put('/auth/forgotPassword', {email: $scope.email})
 				.success (data, status, headers, config) ->
-					if (data.result == 1)
+					if (data != null)
 						$scope.success 'Password reset email has been sent'
 						$scope.form = false
 					else

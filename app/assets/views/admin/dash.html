@@ -23,27 +23,5 @@
 				</table>
 			</div>
 		</div>
-		
-		<div class="col-md-6">
-			<div class="panel panel-default">
-				<div class="panel-heading">Recent feeds ({{ feedCount }} feeds in total)</div>
-				<table class="table">
-					<tr>
-						<th>ID</th>
-						<th>Type</th>
-						<th>Name</th>
-						<th>Added</th>
-						<th>Location</th>
-					</tr>
-					<tr ng-repeat="feed in feeds">
-						<td>{{ feed.id }}</td>
-						<td>{{ feed.category }}</td>
-						<td>{{ feed.name }}</td>
-						<td>{{ feed.dateCreated.time | date:'yy-MM-dd' }}</td>
-						<td>{{ feed.location }}</td>
-					</tr>
-				</table>
-			</div>
-		</div>
 	</div>
 </div>

@@ -29,19 +29,6 @@ class UserTable(tag: Tag) extends Table[User](tag, "users") {
 	def * = (id.?, version, role, email, password, dateCreated, dateUpdated, location, latitude, longitude) <> (User.tupled, User.unapply)
 }
 
-class UserFeedTable(tag: Tag) extends Table[(Int, Int)](tag, "users_feeds") {
-
-	def userId = column[Int]("user_id")
-	def feedId = column[Int]("feed_id")
-
-	def pk = primaryKey("pk_a", (userId, feedId))
-
-//	def user = foreignKey("users_feeds_user_fk", userId, TableQuery[UserTable])(_.id, onDelete=ForeignKeyAction.Cascade)
-	def feed = foreignKey("users_feeds_feed_fk", feedId, TableQuery[FeedTable])(_.id, onDelete=ForeignKeyAction.Cascade)
-
-	def * = (userId, feedId)
-}
-
 class ResetPasswordTable(tag: Tag) extends Table[ResetPassword](tag, "reset_password_tokens") {
 
 	def userId = column[Int]("user_id", O.PrimaryKey)
@@ -55,7 +42,6 @@ class ResetPasswordTable(tag: Tag) extends Table[ResetPassword](tag, "reset_pass
 object UserService {
 
 	val users = TableQuery[UserTable]
-	val userFeeds = TableQuery[UserFeedTable]
 	val resetPasswords = TableQuery[ResetPasswordTable]
 	val db = play.api.db.slick.DB
 
@@ -139,53 +125,5 @@ object UserService {
 				Some(resetPassword)
 			case None => None
 		}
-	}
-	
-	def following(userId: Int): Seq[Int] = db.withSession { implicit session => 
-		userFeeds.filter(_.userId === userId).map(_.feedId).list
-	}
-	
-	def follow(userId: Int, feedId: Int) = db.withSession { implicit session =>
-		userFeeds += (userId, feedId)
-	}
-
-	def unfollow(userId: Int, feedId: Int): Boolean = db.withSession { implicit session =>
-		userFeeds.filter(userFeed => userFeed.userId === userId && userFeed.feedId === feedId).delete > 0
-	}
-
-	def importCSV(file: File) = db.withSession { implicit session =>
-		val reader = CSVReader.open(file)
-
-		reader.foreach( line =>
-			line(0) match {
-				case "" =>
-				case _ =>
-					geocode( line(1) ) match {
-						case Some(geo) =>
-							val email = line(0)
-							val location = line(1)
-
-							create(email, randomString(10), "user", location, geo)
-						case None =>
-					}
-			}
-		)
-
-		reader.close()
-
-		file.delete()
-	}
-	
-	def exportCSV: File = db.withSession { implicit session =>
-		val file = new File("/tmp/user-export.csv")
-		val writer = CSVWriter.open(file)
-		
-		for (i <- 0 until users.length.run by 100) {
-			for (u <- users.drop( i ).take( 100 ).list)
-				writer.writeRow( List(u.id.get.toString, u.email, u.password, u.role, u.location, u.latitude, u.longitude, u.dateCreated.toString, u.dateUpdated.toString) )
-		}
-		
-		writer.close
-		file
 	}
 }

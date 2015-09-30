@@ -8,7 +8,7 @@ define [ 'appModule' ], (app) ->
 		fetch = ->
 			$http.get '/newsletters'
 				.success (data, status, headers, config) ->
-					if data.result == 1
+					if data != null
 						$scope.newsletters = data.data
 
 		$scope.editorOptions =
@@ -33,7 +33,7 @@ define [ 'appModule' ], (app) ->
 
 			$http.get('/newsletters/' + id)
 				.success (data, status, headers, config) ->
-					if data.result == 1
+					if data != null
 						$scope.status = data.data.status
 						$scope.newsletterId = id
 						$scope.newsletterDetails =
@@ -49,7 +49,7 @@ define [ 'appModule' ], (app) ->
 
 			$http.post( '/newsletters/send/' + $scope.newsletterId, $scope.newsletterDetails )
 				.success (data, status, headers, config) ->
-					if data.result == 1
+					if data != null
 						$scope.status = data.data.status
 						$scope.disabled = false
 						$scope.success 'Successfully sent newsletter.'
@@ -66,7 +66,7 @@ define [ 'appModule' ], (app) ->
 
 			$http.get('/newsletters/remove/' + $scope.newsletterId)
 				.success (data, status, headers, config) ->
-					if data.result == 1
+					if data != null
 						$scope.form = false
 						$scope.success 'Successfully deleted newsletter.'
 						fetch()
@@ -78,7 +78,7 @@ define [ 'appModule' ], (app) ->
 			if $scope.form == 'edit'
 				$http.put('/newsletters/' + $scope.newsletterId, $scope.newsletterDetails )
 					.success (data, status, headers, config) ->
-						if data.result == 1
+						if data != null
 							$scope.disabled = false
 							$scope.success 'Successfully updated newsletter.'
 							fetch()
@@ -90,7 +90,7 @@ define [ 'appModule' ], (app) ->
 			else
 				$http.post( '/newsletters/create', $scope.newsletterDetails )
 					.success (data, status, headers, config) ->
-						if data.result == 1
+						if data != null
 							$scope.disabled = false
 							$scope.success 'Successfully created new newsletter.'
 							fetch()

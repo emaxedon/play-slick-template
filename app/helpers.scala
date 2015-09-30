@@ -55,20 +55,18 @@ package object helpers {
 	// Mean radius as defined by the International Union of Geodesy and Geophysics (IUGG)
 	val R1 = (2*equatorialRadius + polarRadius)/3
 	
-	case class Geo( latitude: Double, longitude: Double )
-	{
+	case class Geo( latitude: Double, longitude: Double ) {
 		require( latitude >= -90 && latitude <= 90, "-90 <= latitude <= 90" )
 		require( longitude >= -180 && longitude <= 180, "-180 <= longitude <= 180" )
 	}
 	
 	def angle( dist: Double ) = dist/R1
 	
-	def geoBoundingBox( loc: Geo, radius: Double ) =
-	{
-	val theta = angle( radius )
-	val deglat = toDegrees( theta )
-	val deglng = toDegrees( theta/cos(toRadians(loc.latitude)) )
-	
+	def geoBoundingBox( loc: Geo, radius: Double ) = {
+		val theta = angle( radius )
+		val deglat = toDegrees( theta )
+		val deglng = toDegrees( theta/cos(toRadians(loc.latitude)) )
+		
 		(Geo(loc.latitude - deglat, loc.longitude - deglng), Geo(loc.latitude + deglat, loc.longitude + deglng))
 	}
 }

@@ -29,10 +29,10 @@ object Authentication extends Controller with Secured {
 			UserService.authenticate(userAuth.email, userAuth.password) match {
 				case Some(user) =>
 					val userJson = new UserJson(user)
-					Ok(resultJson(1, "Success! You are now logged in.", toJson(userJson))).withSession("user_id" -> user.id.get.toString)
-				case None => Ok(resultJson(0, "Oops! User email or password incorrect.", JsNull))
+					Ok(toJson(userJson)).withSession("user_id" -> user.id.get.toString)
+				case None => Ok(JsNull)
 			}
-		}.getOrElse(Ok(resultJson(0, "Oops! Invalid json.", JsNull)))
+		}.getOrElse(Ok(JsNull))
 	}
 
 	def loginOnce(userId: Int, passwordToken: String) = Action { implicit request =>
@@ -56,14 +56,14 @@ object Authentication extends Controller with Secured {
 								.withAuth("emaxedon", mailchimpKey, WSAuthScheme.BASIC)
 								.post(toJson(Json.obj("email_address" -> user.email, "status" -> "subscribed")))
 
-							Ok(resultJson(1, "registered", toJson(userJson))).withSession("user_id" -> user.id.get.toString)
+							Ok(toJson(userJson)).withSession("user_id" -> user.id.get.toString)
 						case None =>
-							Ok(resultJson(0, "Oops! Problem registering user.", JsNull))
+							Ok(JsNull)
 						}
 				case None =>
-					Ok(resultJson(0, "Oops! Unrecognized location.", JsNull))
+					Ok(JsNull)
 			}
-		}.getOrElse(Ok(resultJson(0, "Oops! Invalid json.", JsNull)))
+		}.getOrElse(Ok(JsNull))
 	}
 
 	def create = IsAdministrator(parse.json) { implicit user => implicit request =>
@@ -73,45 +73,45 @@ object Authentication extends Controller with Secured {
 					UserService.create(details.email, details.password, details.role.get, details.location, location) match {
 						case Some(user) =>
 							val userJson = new UserJson(user)
-							Ok(resultJson(1, "registered", toJson(userJson)))
+							Ok(toJson(userJson))
 						case None =>
-							Ok(resultJson(0, "Oops! Problem registering user.", JsNull))
+							Ok(JsNull)
 						}
 				case None =>
-					Ok(resultJson(0, "Oops! Unrecognized location.", JsNull))
+					Ok(JsNull)
 			}
-		}.getOrElse(Ok(resultJson(0, "Oops! Invalid json.", JsNull)))
+		}.getOrElse(Ok(JsNull))
 	}
 
 	def logout = IsAuthenticated(parse.anyContent) { implicit user => implicit request =>
-		Ok(resultJson(1, "Success! You have been logged out.", JsNull)).withNewSession
+		Ok(JsNull).withNewSession
 	}
 
 	def user = IsAuthenticated(parse.anyContent) { implicit user => implicit request =>
 		val userJson = new UserJson(user)
-		Ok(resultJson(1, "Success! You have retrieved user data.", toJson(userJson)))
+		Ok(toJson(userJson))
 	}
 
 	def users = IsAdministrator(parse.anyContent) { implicit user => implicit request =>
-		Ok(resultJson(1, "Success! You have retrieved users", Json.obj("users" -> UserService.list.map(user => new UserJson(user)))))
+		Ok(Json.obj("users" -> UserService.list.map(user => new UserJson(user))))
 	}
 
 	def recent(size: Int) = IsAdministrator(parse.anyContent) { implicit user => implicit request =>
-		Ok(resultJson(1, "Success! You have retrieved users", Json.obj("users" -> UserService.recent(size).map(user => new UserJson(user)))))
+		Ok(Json.obj("users" -> UserService.recent(size).map(user => new UserJson(user))))
 	}
 
 	def search(q: String) = IsAdministrator(parse.anyContent) { implicit user => implicit request =>
-		Ok(resultJson(1, "Success! You have retrieved users", Json.obj("users" -> UserService.prefix(q).map(user => new UserJson(user)))))
+		Ok(Json.obj("users" -> UserService.prefix(q).map(user => new UserJson(user))))
 	}
 
 	def prefixCount = IsAdministrator(parse.json) { implicit user => implicit request =>
 		(request.body \ "search").asOpt[String].map { search =>
-			Ok(resultJson(1, "user count", Json.obj("count" -> UserService.prefixCount(search))))
-		}.getOrElse(Ok(resultJson(0, "Oops! Invalid json.", JsNull)))
+			Ok(Json.obj("count" -> UserService.prefixCount(search)))
+		}.getOrElse(Ok(JsNull))
 	}
 
 	def count = IsAdministrator(parse.anyContent) { implicit user => implicit request =>
-		Ok(resultJson(1, "user count", Json.obj("count" -> UserService.count)))
+		Ok(Json.obj("count" -> UserService.count))
 	}
 
 	def password = IsAuthenticated(parse.json) { implicit user => implicit request =>
@@ -119,10 +119,10 @@ object Authentication extends Controller with Secured {
 			UserService.changePassword( user.email, password ) match {
 				case Some(user) =>
 					val userJson = new UserJson(user)
-					Ok(resultJson(1, "Success! Password has been updated.", toJson(userJson)))
-				case None => Ok(resultJson(0, "Oops! Failed to update password.", JsNull))
+					Ok(toJson(userJson))
+				case None => Ok(JsNull)
 			}
-		}.getOrElse(Ok(resultJson(0, "Oops! Invalid json.", JsNull)))
+		}.getOrElse(Ok(JsNull))
 	}
 
 	def forgotPassword = Action(parse.json) { implicit request =>
@@ -138,7 +138,7 @@ object Authentication extends Controller with Secured {
 					try {
 						MailerPlugin.send(email)
 
-						Ok(resultJson(1, "Success! Password has been reset and password token has been sent to your email.", JsNull))
+						Ok(JsNull)
 					} catch {
 						case e: Exception =>
 							val mandrillKey = config.getString("smtp.password")
@@ -154,27 +154,27 @@ object Authentication extends Controller with Secured {
 							)
 
 							Await.result(WS.url("https://mandrillapp.com/api/1.0/messages/send.json").post(emailJson).map { response =>
-								Ok(resultJson(1, "Success! Password has been reset and password token has been sent to your email.", JsNull))
+								Ok(JsNull)
 							}, Duration(5000, MILLISECONDS))
 					}
-				case None => Ok(resultJson(0, "Oops! Failed to reset password.", JsNull))
+				case None => Ok(JsNull)
 			}
-		}.getOrElse(Ok(resultJson(0, "Oops! Invalid json.", JsNull)))
+		}.getOrElse(Ok(JsNull))
 	}
 	
 	def remove(id: Int) = IsAuthenticated(parse.anyContent) { implicit user => implicit request =>
 		if (UserService.remove( id ) == 1)
-			Ok(resultJson(1, "user removed", JsNull))
+			Ok(JsNull)
 		else
-			Ok(resultJson(0, "Oops! Problem removing user.", JsNull))
+			Ok(JsNull)
 	}
 
 	def find(id: Int) = IsAdministrator(parse.anyContent) { implicit user => implicit request =>
 		UserService.find( id ) match {
 			case Some( u ) =>
-				Ok(resultJson(1, "user details", toJson(new UserJson(u))))
+				Ok(toJson(new UserJson(u)))
 			case None =>
-				Ok(resultJson(0, "Oops! Non-existent user.", JsNull))
+				Ok(JsNull)
 		}
 	}
 
@@ -185,32 +185,10 @@ object Authentication extends Controller with Secured {
 			Logger.debug(someInt.toString)
 			
 			if (someInt == 1)
-				Ok(resultJson(1, "user updated", JsNull))
+				Ok(JsNull)
 			else
-				Ok(resultJson(0, "Oops! Problem updating user.", JsNull))
-		}.getOrElse(Ok(resultJson(0, "Oops! Invalid json.", JsNull)))
-	}
-
-	def upload = IsAdministrator(parse.multipartFormData) { implicit user => implicit request =>
-		request.body.file("file").map { file =>
-			val contentType = file.contentType
-			val fileName = randomString(10)
-			
-			file.ref.moveTo(new File("/tmp/" + fileName))
-
-			UserService.importCSV(new File("/tmp/" + fileName))
-
-			Ok(resultJson(1, "successfully imported feeds", JsNull))
-		}.getOrElse {
-			Logger.debug("oops")
-			Ok(resultJson(0, "Oops! An error occured.", JsNull))
-		}
-	}
-
-	def download = IsAdministrator(parse.anyContent) { implicit user => implicit request =>
-		val file = UserService.exportCSV
-		
-		Ok.sendFile(file)
+				Ok(JsNull)
+		}.getOrElse(JsNull))
 	}
 }
 
@@ -218,8 +196,6 @@ object Authentication extends Controller with Secured {
  * Provide security features
  */
 trait Secured {
-
-	def resultJson(result: Int, message: String, data: JsValue): JsValue = Json.obj("result" -> result, "message" -> message, "data" -> data)
 
 	/**
 	 * Retrieve the connected user ID.
@@ -246,7 +222,7 @@ trait Secured {
 		Action(bodyParser) { request =>
 			UserService.find(userId.toInt) match {
 				case Some(user) => f(user)(request)
-				case None => Ok(resultJson(0, "Oops! User is unauthorized.", JsNull))
+				case None => Ok(JsNull)
 			}
 		}
 	}
@@ -259,8 +235,8 @@ trait Secured {
 			UserService.find(userId.toInt) match {
 				case Some(user) =>
 					if (user.role == "admin") f(user)(request)
-					else Ok(resultJson(0, "Oops! You are not an administrator.", JsNull))
-				case None => Ok(resultJson(0, "Oops! User is unauthorized.", JsNull))
+					else Ok(JsNull)
+				case None => Ok(JsNull)
 			}
 		}
 	}
