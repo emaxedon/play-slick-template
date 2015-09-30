@@ -9,7 +9,7 @@ define [ 'appModule' ], (app) ->
 			$http.get '/newsletters'
 				.success (data, status, headers, config) ->
 					if data != null
-						$scope.newsletters = data.data
+						$scope.newsletters = data
 
 		$scope.editorOptions =
 		    language: 'en'
@@ -34,12 +34,12 @@ define [ 'appModule' ], (app) ->
 			$http.get('/newsletters/' + id)
 				.success (data, status, headers, config) ->
 					if data != null
-						$scope.status = data.data.status
+						$scope.status = data.status
 						$scope.newsletterId = id
 						$scope.newsletterDetails =
-							"subject": data.data.subject
-							"text": data.data.text
-							"status": data.data.status
+							"subject": data.subject
+							"text": data.text
+							"status": data.status
 						$scope.disabled = false
 						$scope.form = 'edit'
 
@@ -50,7 +50,7 @@ define [ 'appModule' ], (app) ->
 			$http.post( '/newsletters/send/' + $scope.newsletterId, $scope.newsletterDetails )
 				.success (data, status, headers, config) ->
 					if data != null
-						$scope.status = data.data.status
+						$scope.status = data.status
 						$scope.disabled = false
 						$scope.success 'Successfully sent newsletter.'
 						fetch()
@@ -66,10 +66,9 @@ define [ 'appModule' ], (app) ->
 
 			$http.get('/newsletters/remove/' + $scope.newsletterId)
 				.success (data, status, headers, config) ->
-					if data != null
-						$scope.form = false
-						$scope.success 'Successfully deleted newsletter.'
-						fetch()
+					$scope.form = false
+					$scope.success 'Successfully deleted newsletter.'
+					fetch()
 
 		$scope.formSubmit = ->
 			$scope.disabled = true
@@ -83,7 +82,7 @@ define [ 'appModule' ], (app) ->
 							$scope.success 'Successfully updated newsletter.'
 							fetch()
 						else
-							$scope.error data.message
+							$scope.error data
 					.error (data, status, headers, config) ->
 						$scope.error 'Oops! Problem editing newsletter. Please try again.'
 						$scope.disabled = false
@@ -94,10 +93,10 @@ define [ 'appModule' ], (app) ->
 							$scope.disabled = false
 							$scope.success 'Successfully created new newsletter.'
 							fetch()
-							$scope.edit(data.data.id)
+							$scope.edit(data.id)
 						else
 							$scope.disabled = false
-							$scope.error data.message
+							$scope.error data
 					.error (data, status, headers, config) ->
 						$scope.error 'Oops! Problem adding newsletter. Please try again.'
 						$scope.disabled = false

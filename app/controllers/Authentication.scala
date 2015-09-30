@@ -40,7 +40,7 @@ object Authentication extends Controller with Secured {
 			case Some(user) =>
 				val userJson = new UserJson(user)
 				Ok(views.html.reset("Reset password")).withSession("user_id" -> user.id.get.toString)
-			case None => Ok(resultJson(0, "Oops! Reset password token invalid.", JsNull))
+			case None => Ok(JsNull)
 		}
 	}
 
@@ -188,7 +188,7 @@ object Authentication extends Controller with Secured {
 				Ok(JsNull)
 			else
 				Ok(JsNull)
-		}.getOrElse(JsNull))
+		}.getOrElse(Ok(JsNull))
 	}
 }
 
@@ -205,7 +205,7 @@ trait Secured {
 	/**
 	 * Return failed message.
 	 */
-	private def onUnauthorized(request: RequestHeader) = Ok(resultJson(0, "unauthorized attempt", JsNull))
+	private def onUnauthorized(request: RequestHeader) = Ok(JsNull)
 
 	def CheckIfAuthenticated[A](userinfo: RequestHeader => Option[A])(action: Option[A] => EssentialAction): EssentialAction = {
 		EssentialAction { request =>

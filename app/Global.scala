@@ -72,27 +72,6 @@ object Global extends GlobalSettings {
 			case _ =>
 		}
 		
-		Logger.info( "adding feeds" )
-		
-		FeedService.list match {
-			case Nil =>
-				for (i <- 1 to 10) {
-					val player = randomContact
-					
-					FeedService.create( player.first + " " + player.last,
-											"player", None, None, None, None, player.postal, player.location )
-						
-					val team = randomContact
-					
-					FeedService.create( team.first + "'s Team", "team", None, None, None, None, team.postal, team.location )
-				}
-			case _ =>
-		}
-
-		if (UserService.following(1) isEmpty)
-			UserService.follow( 1, 2 )
-		
 		Logger.info( "done initializing" )
-
 	}
 }

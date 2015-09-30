@@ -31,10 +31,6 @@ require.config
 		'appLoginController': 'javascripts/admin/controllers/appLoginController'
 		'appDashController': 'javascripts/admin/controllers/appDashController'
 		'appUsersController': 'javascripts/admin/controllers/appUsersController'
-		'appFeedsController': 'javascripts/admin/controllers/appFeedsController'
-		'appPopularController': 'javascripts/admin/controllers/appPopularController'
-		'appTrendingController': 'javascripts/admin/controllers/appTrendingController'
-		'appImportExportController': 'javascripts/admin/controllers/appImportExportController'
 		'appNewslettersController': 'javascripts/admin/controllers/appNewslettersController'
 		'appBoot': 'javascripts/admin/appBoot'
 

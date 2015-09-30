@@ -40,46 +40,46 @@ object Newsletters extends Controller with Secured {
 			NewsletterService.update( id, Some(details.subject), Some(details.text), Some(1) )
 
 			NewsletterService.find(id) match {
-				case Some(newsletter) => Ok(resultJson(1, "sent newsletter", toJson(new NewsletterJson(newsletter))))
-				case None => Ok(resultJson(0, "Oops! Problem finding newsletter.", JsNull))
+				case Some(newsletter) => Ok(toJson(new NewsletterJson(newsletter)))
+				case None => Ok(JsNull)
 			}
-		}.getOrElse(Ok(resultJson(0, "Oops! Invalid json.", JsNull)))
+		}.getOrElse(Ok(JsNull))
 	}
 
 	def create = IsAdministrator(parse.json) { implicit user => implicit request =>
 		request.body.validate[NewsletterDetails].map { details =>
 			NewsletterService.create(details.subject, details.text) match {
-					case Some(newsletter) => Ok(resultJson(1, "created newsletter", toJson(new NewsletterJson(newsletter))))
-					case None => Ok(resultJson(0, "Oops! Problem creating newsletter.", JsNull))
+					case Some(newsletter) => Ok(toJson(new NewsletterJson(newsletter)))
+					case None => Ok(JsNull)
 			}
-		}.getOrElse(Ok(resultJson(0, "Oops! Invalid json.", JsNull)))
+		}.getOrElse(Ok(JsNull))
 	}
 
 	def update(id: Int) = IsAdministrator(parse.json) { implicit user => implicit request =>
 		request.body.validate[NewsletterUpdate].map { details =>
 			if (NewsletterService.update( id, details.subject, details.text, details.status ) > 0)
-				Ok(resultJson(1, "newsletter updated", JsNull))
+				Ok(JsNull)
 			else
-				Ok(resultJson(0, "Oops! Problem updating newsletter.", JsNull))
-		}.getOrElse(Ok(resultJson(0, "Oops! Invalid json.", JsNull)))
+				Ok(JsNull)
+		}.getOrElse(Ok(JsNull))
 	}
 
 	def list = IsAdministrator(parse.anyContent) { implicit user => implicit request =>
-		Ok(resultJson(1, "all newsletters", toJson(NewsletterService.list.map(new NewsletterJson(_)))))
+		Ok(toJson(NewsletterService.list.map(new NewsletterJson(_))))
 	}
 
 	def find(id: Int) = IsAuthenticated(parse.anyContent) { implicit user => implicit request =>
 		NewsletterService.find(id) match {
-			case Some( n ) => Ok(resultJson(1, "newsletter by id", toJson(new NewsletterJson(n))))
-			case None => Ok(resultJson(0, "Oops! Non-existent newsletter.", JsNull))
+			case Some( n ) => Ok(toJson(new NewsletterJson(n)))
+			case None => Ok(JsNull)
 		}
 	}
 
 	def remove(id: Int) = IsAdministrator(parse.anyContent) { implicit user => implicit request =>
 		if (NewsletterService.remove( id ) > 0)
-			Ok(resultJson(1, "removed newlsetter", JsNull))
+			Ok(JsNull)
 		else
-			Ok(resultJson(0, "Oops! Problem removing newsletter.", JsNull))
+			Ok(JsNull)
 	}
 
 }

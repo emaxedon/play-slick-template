@@ -18,13 +18,13 @@ define [ 'appModule' ], (app) ->
 					$scope.disabled = false
 					
 					if (data != null)
-						if (data.data.role != "admin")
+						if (data.role != "admin")
 							$scope.error 'Oops! Not an administrator account.'
 							service.logout()
 						else
 							$location.path '/dash'
 					else
-						$scope.error data.message
+						$scope.error data
 				.error (data, status, headers, config) ->
 					$scope.error 'Error logging in - please try again.'
 		]

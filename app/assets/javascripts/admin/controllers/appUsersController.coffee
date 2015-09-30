@@ -13,8 +13,8 @@ define [ 'appModule' ], (app) ->
 						q: $scope.email
 				.success (data, status, headers, config) ->
 					if data != null
-						$scope.matches = data.data.users.length
-						$scope.users = data.data.users
+						$scope.matches = data.users.length
+						$scope.users = data.users
 			else
 				$scope.matches = 0
 				$scope.users = []
@@ -31,10 +31,9 @@ define [ 'appModule' ], (app) ->
 
 			$http.get('/auth/remove/' + $scope.userId)
 				.success (data, status, headers, config) ->
-					if data != null
-						$scope.form = false
-						$scope.success 'Successfully deleted user.'
-						search()
+					$scope.form = false
+					$scope.success 'Successfully deleted user.'
+					search()
 		
 		$scope.create = ->
 			$scope.userDetails =
@@ -58,9 +57,9 @@ define [ 'appModule' ], (app) ->
 					if data != null
 						$scope.userId = id
 						$scope.userDetails =
-							"email": data.data.email
-							"role": data.data.role
-							"location": data.data.location
+							"email": data.email
+							"role": data.role
+							"location": data.location
 						$scope.disabled = false
 						$scope.form = 'edit'
 			
@@ -71,13 +70,9 @@ define [ 'appModule' ], (app) ->
 			if $scope.form == 'edit'
 				$http.put('/auth/user/' + $scope.userId, $scope.userDetails )
 					.success (data, status, headers, config) ->
-						if data != null
-							$scope.disabled = false
-							$scope.success 'Successfully updated user.'
-							search()
-						else
-							$scope.error data.message
-							$scope.disabled = false
+						$scope.disabled = false
+						$scope.success 'Successfully updated user.'
+						search()
 					.error (data, status, headers, config) ->
 						$scope.error 'Oops! Problem editing user. Try again.'
 			else
@@ -89,7 +84,7 @@ define [ 'appModule' ], (app) ->
 							$scope.success 'Successfully created new user.'
 							search()
 						else
-							$scope.error data.message
+							$scope.error data
 							$scope.disabled = false
 					.error (data, status, headers, config) ->
 						$scope.error 'Oops! Problem creating user. Try again.'

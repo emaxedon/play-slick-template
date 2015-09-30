@@ -4,12 +4,12 @@ define [ 'appModule' ], (app) ->
 		$http.get('/auth/recent/10')
 			.success (data, status, headers, config) ->
 				if data != null
-					$scope.users = data.data.users
+					$scope.users = data.users
 					
 			.error (data, status, headers, config) ->
 				
 		$http.get('/auth/count')
 			.success (data, status, headers, config) ->
 				if data != null
-					$scope.userCount = data.data.count
+					$scope.userCount = data.count
 		]
